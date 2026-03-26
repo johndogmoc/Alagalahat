@@ -1,0 +1,28 @@
+export type FilingUserRole = "Owner" | "Staff" | "Admin";
+export type LostPetReportStatus = "Pending" | "Active" | "Resolved" | "Archived";
+
+export interface LostPetRegistrationSnapshot {
+  petPhotoUrl: string | null;
+  petName: string;
+  species: "Dog" | "Cat" | "Other";
+  breed: string | null;
+  color: string | null;
+  size: string | null;
+  vaccinationDetails: string | null;
+  registrationNumber: string;
+  ownerName: string;
+  ownerContactNumber: string | null;
+}
+
+export interface LostPetReport {
+  id: string;
+  pet: LostPetRegistrationSnapshot;
+  lastKnownLocation: string;
+  missingAt: string; // ISO datetime
+  notes?: string | null;
+  filingUserRole: FilingUserRole;
+  status: LostPetReportStatus;
+  createdAt: string; // ISO datetime
+  updatedAt: string; // ISO datetime
+}
+
