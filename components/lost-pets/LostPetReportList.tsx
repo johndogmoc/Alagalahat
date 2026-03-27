@@ -261,7 +261,7 @@ export function LostPetReportList() {
                       <Button
                         disabled={isMutatingId === r.id}
                         onClick={() => updateStatus(r.id, "Active")}
-                        variant={r.status === "Active" ? "outline" : "default"}
+                        variant={r.status === "Active" ? "outline" : "primary"}
                       >
                         Approve
                       </Button>

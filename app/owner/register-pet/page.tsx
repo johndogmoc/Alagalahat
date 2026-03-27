@@ -174,7 +174,7 @@ export default function RegisterPetPage() {
         photo_url: photoUrl || null,
         registration_number: rn,
         status: "Pending"
-      });
+      } as never);
 
       if (error) {
         toast.error(error.message);
