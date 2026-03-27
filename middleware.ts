@@ -31,6 +31,11 @@ function roleHome(role: Role) {
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
 
+  // If env vars are not configured, deny access to protected routes instead of crashing.
+  // This prevents runtime failures like "project URL and Key are required".
+  const hasSupabaseEnv =
+    Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) && Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
@@ -49,11 +54,17 @@ export async function middleware(request: NextRequest) {
     }
   );
 
+  const { pathname } = request.nextUrl;
+
+  if (!hasSupabaseEnv) {
+    if (!isAuthRequiredPath(pathname)) return response;
+    // Default-safe behavior when we cannot verify the session.
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
   const { data } = await supabase.auth.getUser();
   const user = data.user ?? null;
   const role = getRoleFromUser(user);
-
-  const { pathname } = request.nextUrl;
 
   // Redirect logged-in users away from auth pages.
   if (user && isPublicPath(pathname)) {
