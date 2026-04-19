@@ -44,7 +44,7 @@ export function DashboardShell({ role, userName, children }: DashboardShellProps
           <RightSidebar />
         </div>
 
-        <MobileBottomNav role={role} />
+        <MobileBottomNav role={role} userName={userName} />
       </div>
     );
   }
@@ -57,7 +57,7 @@ export function DashboardShell({ role, userName, children }: DashboardShellProps
           {children}
         </main>
         <Footer />
-        <MobileBottomNav role={role} />
+        <MobileBottomNav role={role} userName={userName} />
       </div>
     </div>
   );

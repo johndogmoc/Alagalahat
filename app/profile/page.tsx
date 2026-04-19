@@ -63,81 +63,131 @@ export default function ProfilePage() {
 
   return (
     <DashboardShell role={role} userName={userName}>
-      <div style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: 32, fontWeight: 700, margin: "0 0 8px", letterSpacing: "-0.02em" }}>Profile</h1>
-        <p style={{ margin: "0 0 0", color: "var(--color-text-muted)", fontSize: "var(--font-size-base)" }}>
-          Account details from your registration. To change role or legal name, contact an administrator.
+      <div style={{ marginBottom: 32, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+        <h1 style={{ fontSize: 36, fontWeight: 800, margin: "0 0 8px", letterSpacing: "-0.02em", color: "var(--color-primary-dark)" }}>My Profile</h1>
+        <p style={{ margin: "0", color: "var(--color-text-muted)", fontSize: "var(--font-size-base)", maxWidth: 400 }}>
+          Manage your personal details. To change your role or legal name, please contact an administrator.
         </p>
       </div>
 
-      {/* Main Profile Card */}
-      <div
-        className="card-base card-hover"
-        style={{
-          maxWidth: 540,
-          display: "grid",
-          gap: 0,
-          overflow: "visible"
-        }}
-      >
-        {/* Card Header with Gradient */}
+      <div style={{
+        maxWidth: 800,
+        margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: 32
+      }}>
+        {/* Banner and Avatar Profile Card */}
         <div style={{
-          background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)",
-          color: "#fff",
-          padding: 32,
-          borderRadius: "var(--radius-lg) var(--radius-lg) 0 0"
+          background: "var(--color-card)",
+          borderRadius: "24px",
+          border: "1px solid var(--color-border)",
+          boxShadow: "0 12px 32px rgba(0,0,0,0.05)",
+          overflow: "hidden",
+          position: "relative"
         }}>
-          <div style={{ 
-            width: 80, 
-            height: 80, 
-            borderRadius: "50%", 
-            background: "rgba(255, 255, 255, 0.2)",
-            border: "2px solid rgba(255, 255, 255, 0.3)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 32,
-            fontWeight: 700,
-            marginBottom: 16
+          {/* Banner */}
+          <div style={{
+            height: 140,
+            background: "linear-gradient(135deg, var(--color-primary) 0%, #3B82F6 100%)",
+            position: "relative"
           }}>
-            {userName.charAt(0).toUpperCase()}
+            <div style={{ position: "absolute", top: 16, right: 16 }}>
+              <span style={{ 
+                background: "rgba(255,255,255,0.2)", backdropFilter: "blur(4px)", padding: "6px 12px", 
+                borderRadius: "100px", color: "#fff", fontSize: 13, fontWeight: 700 
+              }}>
+                {role} Account
+              </span>
+            </div>
           </div>
-          <h2 style={{ fontSize: 24, fontWeight: 700, margin: 0, color: "#fff" }}>{userName || "—"}</h2>
-          <p style={{ margin: "4px 0 0", fontSize: "var(--font-size-sm)", opacity: 0.9 }}>{role}</p>
+          
+          {/* Avatar & Basic Info */}
+          <div style={{ padding: "0 32px 32px", display: "flex", flexDirection: "column", alignItems: "center", marginTop: -50 }}>
+            <div style={{
+              width: 100,
+              height: 100,
+              borderRadius: "50%",
+              background: "var(--color-background)",
+              border: "4px solid var(--color-card)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 36,
+              fontWeight: 800,
+              color: "var(--color-primary)",
+              boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
+              marginBottom: 16
+            }}>
+              {userName.charAt(0).toUpperCase()}
+            </div>
+            <h2 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 4px", color: "var(--color-text)", letterSpacing: "-0.01em" }}>{userName || "—"}</h2>
+            <p style={{ margin: 0, fontSize: 15, color: "var(--color-text-muted)", fontWeight: 500 }}>{email}</p>
+          </div>
         </div>
 
-        {/* Card Content */}
-        <div style={{ padding: 32, display: "grid", gap: 24 }}>
-          {/* Email Field */}
-          <div>
-            <label style={{ fontSize: "var(--font-size-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.5px" }}>Email Address</label>
-            <p style={{ margin: "8px 0 0", fontWeight: 500, fontSize: "var(--font-size-base)", color: "var(--color-text)" }}>{email}</p>
+        {/* Detailed Info Grid */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: 24
+        }}>
+          {/* Contact Details */}
+          <div style={{
+            background: "var(--color-card)",
+            borderRadius: "20px",
+            border: "1px solid var(--color-border)",
+            padding: 24,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.02)"
+          }}>
+            <h3 style={{ margin: "0 0 20px", fontSize: 16, fontWeight: 700, color: "var(--color-text)" }}>Contact Information</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              <div>
+                <label style={{ fontSize: 12, fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.5px", display: "block", marginBottom: 6 }}>Phone Number</label>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, background: "var(--color-background-hover)", padding: "12px 16px", borderRadius: "12px" }}>
+                  <span style={{ fontSize: 15, fontWeight: 600, color: "var(--color-text)" }}>{phone || "Not provided"}</span>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Barangay Field */}
-          <div>
-            <label style={{ fontSize: "var(--font-size-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.5px" }}>Barangay</label>
-            <p style={{ margin: "8px 0 0", fontWeight: 500, fontSize: "var(--font-size-base)", color: "var(--color-text)" }}>{barangay || "—"}</p>
+          {/* Location Details */}
+          <div style={{
+            background: "var(--color-card)",
+            borderRadius: "20px",
+            border: "1px solid var(--color-border)",
+            padding: 24,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.02)"
+          }}>
+            <h3 style={{ margin: "0 0 20px", fontSize: 16, fontWeight: 700, color: "var(--color-text)" }}>Location Details</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              <div>
+                <label style={{ fontSize: 12, fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.5px", display: "block", marginBottom: 6 }}>Barangay</label>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, background: "var(--color-background-hover)", padding: "12px 16px", borderRadius: "12px" }}>
+                  <span style={{ fontSize: 15, fontWeight: 600, color: "var(--color-text)" }}>{barangay || "Not provided"}</span>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
 
-          {/* Phone Field */}
-          <div>
-            <label style={{ fontSize: "var(--font-size-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.5px" }}>Phone Number</label>
-            <p style={{ margin: "8px 0 0", fontWeight: 500, fontSize: "var(--font-size-base)", color: "var(--color-text)" }}>{phone || "—"}</p>
-          </div>
-
-          {/* Divider */}
-          <div style={{ height: 1, background: "var(--color-border)", margin: "8px 0" }} />
-
-          {/* Action Buttons */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 12, paddingTop: 8 }}>
-            <Button variant="outline" asChild href="/help" style={{ width: "100%", justifyContent: "center" }}>
-              <span>Get Help & Support</span>
-            </Button>
-            <Button variant="destructive" type="button" onClick={() => void signOut()} style={{ width: "100%", justifyContent: "center" }}>
-              Sign Out
-            </Button>
-          </div>
+        {/* Actions Section */}
+        <div style={{
+          background: "var(--color-card)",
+          borderRadius: "20px",
+          border: "1px solid var(--color-border)",
+          padding: 24,
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 16,
+          boxShadow: "0 4px 12px rgba(0,0,0,0.02)"
+        }}>
+          <Button variant="outline" asChild href="/help" style={{ flex: 1, minWidth: 200, padding: "24px 16px", borderRadius: "12px", fontSize: 15, fontWeight: 700 }}>
+            <span>Get Help & Support</span>
+          </Button>
+          <Button variant="destructive" onClick={() => void signOut()} style={{ flex: 1, minWidth: 200, padding: "24px 16px", borderRadius: "12px", fontSize: 15, fontWeight: 700 }}>
+            Sign Out
+          </Button>
         </div>
       </div>
     </DashboardShell>
