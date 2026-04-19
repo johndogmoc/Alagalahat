@@ -118,35 +118,23 @@ export default function OwnerSettingsPage() {
   return (
     <DashboardShell role="Owner" userName={userName}>
       {/* Header Section */}
-      <div style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: 32, fontWeight: 700, margin: 0, letterSpacing: "-0.02em" }}>Settings & Privacy</h1>
-        <p style={{ margin: "8px 0 0", fontSize: "var(--font-size-base)", color: "var(--color-text-muted)" }}>
-          Manage your account, security, notifications, and preferences.
-        </p>
+      <div style={{ marginBottom: 32, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <div>
+          <h1 style={{ fontSize: 32, fontWeight: 700, margin: 0, letterSpacing: "-0.02em" }}>Settings & Privacy</h1>
+          <p style={{ margin: "8px 0 0", fontSize: "var(--font-size-base)", color: "var(--color-text-muted)", maxWidth: 300 }}>
+            Manage your account, security, notifications, and preferences.
+          </p>
+        </div>
+        
+        {/* Mobile Menu Toggle */}
+        <button 
+          className="settings-hamburger-btn" 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle settings menu"
+        >
+          <IconMenu size={24} />
+        </button>
       </div>
-
-      {/* Mobile Menu Toggle */}
-      <button 
-        className="settings-hamburger-btn" 
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        aria-label="Toggle settings menu"
-        style={{
-          display: "none",
-          position: "absolute",
-          top: 20,
-          right: 20,
-          background: "var(--color-primary)",
-          color: "#fff",
-          border: "none",
-          borderRadius: "var(--radius-md)",
-          padding: "10px 12px",
-          cursor: "pointer",
-          fontSize: "var(--font-size-base)",
-          fontWeight: 600
-        }}
-      >
-        <IconMenu size={24} />
-      </button>
 
       {/* Layout: Sidebar + Content */}
       <div className="settings-layout" style={{ position: "relative", display: "flex", gap: 32 }}>
