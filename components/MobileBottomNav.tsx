@@ -68,12 +68,12 @@ export function MobileBottomNav({ role, userName = "User" }: { role: SidebarRole
         position: "fixed",
         bottom: isDropupOpen ? "80px" : "-200px",
         left: "16px",
-        background: "#1E293B",
-        border: "1px solid #334155",
+        background: "var(--color-card)",
+        border: "1px solid var(--color-border)",
         borderRadius: "16px",
         padding: "12px 0",
         width: "240px",
-        boxShadow: "0 10px 40px rgba(0,0,0,0.5)",
+        boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
         zIndex: 100,
         opacity: isDropupOpen ? 1 : 0,
         pointerEvents: isDropupOpen ? "auto" : "none",
@@ -83,27 +83,27 @@ export function MobileBottomNav({ role, userName = "User" }: { role: SidebarRole
         gap: "4px"
       }}>
         {/* Header */}
-        <div style={{ padding: "8px 20px 12px", borderBottom: "1px solid #334155", marginBottom: "4px" }}>
-          <p style={{ margin: 0, fontSize: "14px", fontWeight: 800, color: "#F8FAFC" }}>{userName}</p>
+        <div style={{ padding: "8px 20px 12px", borderBottom: "1px solid var(--color-border)", marginBottom: "4px" }}>
+          <p style={{ margin: 0, fontSize: "14px", fontWeight: 800, color: "var(--color-text)" }}>{userName}</p>
         </div>
         
         <Link href="/profile" onClick={() => setIsDropupOpen(false)} style={{
-          padding: "12px 20px", textDecoration: "none", color: "#F8FAFC", fontSize: "14px", fontWeight: 600,
+          padding: "12px 20px", textDecoration: "none", color: "var(--color-text)", fontSize: "14px", fontWeight: 600,
           display: "flex", alignItems: "center", transition: "background 0.2s"
         }}>
           Dashboard / My Profile
         </Link>
         <Link href="/owner/settings" onClick={() => setIsDropupOpen(false)} style={{
-          padding: "12px 20px", textDecoration: "none", color: "#F8FAFC", fontSize: "14px", fontWeight: 600,
+          padding: "12px 20px", textDecoration: "none", color: "var(--color-text)", fontSize: "14px", fontWeight: 600,
           display: "flex", alignItems: "center", transition: "background 0.2s"
         }}>
           Settings & Privacy
         </Link>
         
-        <div style={{ height: "1px", background: "#334155", margin: "4px 0" }} />
+        <div style={{ height: "1px", background: "var(--color-border)", margin: "4px 0" }} />
         
         <button onClick={handleLogout} style={{
-          padding: "12px 20px", border: "none", background: "transparent", color: "#F8FAFC", fontSize: "14px", fontWeight: 600,
+          padding: "12px 20px", border: "none", background: "transparent", color: "var(--color-text)", fontSize: "14px", fontWeight: 600,
           textAlign: "left", cursor: "pointer", transition: "background 0.2s"
         }}>
           Log Out
