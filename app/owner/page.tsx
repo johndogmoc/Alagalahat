@@ -10,6 +10,8 @@ import {
   IconPaw, IconAlertTriangle, IconSyringe, IconCheck,
   IconChevronRight, IconClipboard, IconSearch, IconBell, IconShield
 } from "@/components/icons";
+import { PetCard } from "@/components/shared/PetCard";
+import { StatusBadge } from "@/components/shared/StatusBadge";
 
 interface PetRow {
   id: string;
@@ -355,34 +357,14 @@ export default function OwnerDashboardPage() {
             </div>
             <div style={{ display: "flex", gap: 16, overflowX: "auto", paddingBottom: 8, margin: "0 -4px", padding: "0 4px" }}>
               {pets.slice(0, 4).map((pet) => (
-                <Link key={pet.id} href={`/pets/${pet.id}`} style={{
-                  minWidth: 140, background: "#fff", border: "1px solid rgba(0,0,0,0.06)",
-                  borderRadius: "20px", padding: "20px 16px", textDecoration: "none", color: "inherit",
-                  display: "flex", flexDirection: "column", alignItems: "center", gap: 12, flexShrink: 0,
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.02)", transition: "all 0.3s ease"
-                }}
-                onMouseOver={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 24px rgba(0,0,0,0.06)"; }}
-                onMouseOut={(e) => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.02)"; }}>
-                  <div style={{
-                    width: 64, height: 64, borderRadius: "50%", background: "#F4F6F8",
-                    display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden",
-                    border: "3px solid #fff", boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
-                  }}>
-                    {pet.photo_url ? (
-                      <img src={pet.photo_url} alt={pet.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    ) : (
-                      <IconPaw size={28} style={{ color: "var(--color-text-light)" }} />
-                    )}
-                  </div>
-                  <p style={{ margin: 0, fontWeight: 800, fontSize: 15, textAlign: "center", color: "var(--color-text)" }}>{pet.name}</p>
-                  <span style={{
-                    padding: "4px 12px", borderRadius: "100px", fontSize: 11, fontWeight: 800,
-                    background: pet.status === "Approved" ? "var(--color-success)" + "18" : "var(--color-amber)" + "18",
-                    color: pet.status === "Approved" ? "var(--color-success)" : "var(--color-amber)"
-                  }}>
-                    {pet.status}
-                  </span>
-                </Link>
+                <PetCard
+                  key={pet.id}
+                  id={pet.id}
+                  name={pet.name}
+                  status={pet.status}
+                  photo_url={pet.photo_url}
+                  href={`/pets/${pet.id}`}
+                />
               ))}
               <Link href="/owner/register-pet" style={{
                 minWidth: 140, border: "2px dashed rgba(0,0,0,0.15)", borderRadius: "20px",

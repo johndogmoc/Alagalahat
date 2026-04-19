@@ -357,12 +357,12 @@ export default function RegisterPetPage() {
                 const selected = species === s.value;
                 return (
                   <button key={s.value} type="button" role="radio" aria-checked={selected} onClick={() => { setSpecies(s.value); clearErr("species"); }} style={{
-                    display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
-                    padding: 16, border: `2px solid ${selected ? "var(--color-primary)" : "var(--color-border)"}`,
+                    display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8,
+                    padding: "12px 16px", border: `2px solid ${selected ? "var(--color-primary)" : "var(--color-border)"}`,
                     borderRadius: "var(--radius-lg)", background: selected ? "rgba(27,79,138,0.04)" : "var(--color-card)",
-                    cursor: "pointer", transition: "all var(--transition-fast)", fontFamily: "inherit", minHeight: 44
+                    cursor: "pointer", transition: "all var(--transition-fast)", fontFamily: "inherit", minHeight: 48
                   }}>
-                    <span style={{ fontSize: 32 }}>{s.emoji}</span>
+                    {s.emoji && <span style={{ fontSize: 32 }}>{s.emoji}</span>}
                     <span style={{ fontWeight: 600, fontSize: "var(--font-size-sm)", color: selected ? "var(--color-primary)" : "var(--color-text)" }}>{s.label}</span>
                   </button>
                 );

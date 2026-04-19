@@ -27,6 +27,8 @@
   --color-coral-dark: #E84C3D;
   --color-success: #2ECC71;
   --color-success-dark: #27AE60;
+  --color-info: #3498DB;
+  --color-warning: #F39C12;
 
   /* Surfaces */
   --color-background: #FAFBFC;
@@ -55,6 +57,19 @@
   --shadow-md: 0 2px 12px rgba(16, 24, 48, 0.10);
   --shadow-lg: 0 4px 24px rgba(16, 24, 48, 0.14);
   --shadow-xl: 0 8px 32px rgba(16, 24, 48, 0.18);
+  --shadow-5: 0 32px 64px -12px rgba(0, 0, 0, 0.35);
+
+  --z-base: 0;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal-backdrop: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-overlay: 600;
+
+  --color-glass-bg: rgba(255, 255, 255, 0.65);
+  --color-glass-border: rgba(255, 255, 255, 0.3);
 
   /* Radii */
   --radius-sm: 6px;
@@ -149,6 +164,12 @@
   --color-secondary-dark: #059669;
   --color-secondary-foreground: #FFFFFF;
 
+  --color-info: #60A5FA;
+  --color-warning: #FBBF24;
+
+  --color-glass-bg: rgba(30, 30, 40, 0.65);
+  --color-glass-border: rgba(255, 255, 255, 0.08);
+
   --color-amber: #FBBF24;
   --color-amber-dark: #D97706;
   --color-coral: #FB7185;
@@ -240,6 +261,16 @@ body {
 /* Remove focus outline for mouse users */
 *:focus:not(:focus-visible) {
   outline: none;
+}
+
+/* === GLASSMORPHISM UTILITY CLASS === */
+.glass-card {
+  background: var(--color-glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
 }
 
 /* --- Links --- */
