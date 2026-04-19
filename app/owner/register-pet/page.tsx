@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/sonner";
 import { getSupabaseClient } from "@/lib/supabase";
 import { getRegions, getProvinces, getCities, getBarangays } from "@/lib/barangayApi";
+import "@/app/register/register.css";
 import {
   IconPaw, IconCheck, IconSpinner, IconUser, IconX, IconClipboard
 } from "@/components/icons";
@@ -93,6 +94,9 @@ export default function RegisterPetPage() {
     return `${y} year${y !== 1 ? "s" : ""}${m > 0 ? `, ${m} month${m !== 1 ? "s" : ""}` : ""} old`;
   }, [dob]);
 
+  // Track whether we've auto-filled location from profile
+  const [locationAutoFilled, setLocationAutoFilled] = useState(false);
+
   useEffect(() => {
     const supabase = getSupabaseClient();
     supabase.auth.getUser().then(({ data }: { data: { user: { id: string; email?: string; user_metadata?: Record<string, string> } | null } | null }) => {
@@ -101,9 +105,23 @@ export default function RegisterPetPage() {
         setUserName(u.user_metadata?.full_name || u.email?.split("@")[0] || "Pet Owner");
         setUserId(u.id);
         setUserEmail(u.email || "");
+
+        // Auto-fill location from user profile
+        const meta = u.user_metadata;
+        if (meta?.region) {
+          skipResetRef.current = true;
+          setRegion(meta.region);
+          if (meta.province) setProvince(meta.province);
+          if (meta.city) setCity(meta.city);
+          if (meta.barangay) setBarangay(meta.barangay);
+          setLocationAutoFilled(true);
+        }
       }
     });
   }, []);
+
+  // Track if we should skip the reset on auto-fill
+  const skipResetRef = useRef(false);
 
   // Fetch regions on mount
   useEffect(() => {
@@ -116,8 +134,12 @@ export default function RegisterPetPage() {
 
   // Fetch provinces when region changes
   useEffect(() => {
-    setProvince(""); setCity(""); setBarangay("");
-    setProvinces([]); setCities([]); setBarangays([]);
+    if (skipResetRef.current) {
+      // Don't reset — just fetch
+    } else {
+      setProvince(""); setCity(""); setBarangay("");
+      setProvinces([]); setCities([]); setBarangays([]);
+    }
     if (!region) return;
     setLocationLoading("provinces");
     getProvinces(region)
@@ -128,8 +150,12 @@ export default function RegisterPetPage() {
 
   // Fetch cities when province changes
   useEffect(() => {
-    setCity(""); setBarangay("");
-    setCities([]); setBarangays([]);
+    if (skipResetRef.current) {
+      // Don't reset — just fetch
+    } else {
+      setCity(""); setBarangay("");
+      setCities([]); setBarangays([]);
+    }
     if (!region || !province) return;
     setLocationLoading("cities");
     getCities(region, province)
@@ -140,8 +166,12 @@ export default function RegisterPetPage() {
 
   // Fetch barangays when city changes
   useEffect(() => {
-    setBarangay("");
-    setBarangays([]);
+    if (skipResetRef.current) {
+      skipResetRef.current = false; // Last in cascade — allow resets next time
+    } else {
+      setBarangay("");
+      setBarangays([]);
+    }
     if (!region || !province || !city) return;
     setLocationLoading("barangays");
     getBarangays(region, province, city)
@@ -301,17 +331,17 @@ export default function RegisterPetPage() {
      ============================================ */
   return (
     <DashboardShell role="Owner" userName={userName}>
-      <div style={{ maxWidth: 720, marginInline: "auto", paddingBottom: 64 }}>
+      <div style={{ maxWidth: 720, marginInline: "auto", paddingBottom: 64, padding: "0 16px 64px" }}>
         <div style={{ marginBottom: 24 }}>
-          <h1 style={{ fontSize: 28, fontWeight: 700, color: "var(--color-text)", margin: 0 }}>Register a Pet</h1>
-          <p style={{ margin: 0, marginTop: 4, fontSize: "var(--font-size-sm)", color: "var(--color-text-muted)" }}>
+          <h1 className="reg-page-title" style={{ fontWeight: 700, color: "var(--color-text)", margin: 0 }}>Register a Pet</h1>
+          <p style={{ margin: 0, marginTop: 4, fontSize: "var(--font-size-sm)", color: "var(--color-text-muted)", wordBreak: "break-word" }}>
             Fill in your pet&apos;s information to get a barangay registration
           </p>
         </div>
 
         {/* ====== SECTION 1: Basic Info ====== */}
-        <section style={sectionStyle}>
-          <h2 style={sectionTitle}>Section 1 — Basic Info</h2>
+        <section style={sectionStyle} className="reg-section">
+          <h2 style={sectionTitle} className="reg-section-title">Section 1 — Basic Info</h2>
 
           <div style={fieldGroup}>
             <Label htmlFor="pet-name" style={labelStyle}>Pet Name</Label>
@@ -322,7 +352,7 @@ export default function RegisterPetPage() {
           {/* Species — icon radio cards */}
           <div style={fieldGroup}>
             <Label style={labelStyle}>Species</Label>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }} role="radiogroup" aria-label="Pet species">
+            <div className="reg-species-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }} role="radiogroup" aria-label="Pet species">
               {SPECIES.map((s) => {
                 const selected = species === s.value;
                 return (
@@ -341,7 +371,7 @@ export default function RegisterPetPage() {
             {errors.species && <p style={errStyle} role="alert">{errors.species}</p>}
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div className="reg-grid-2col">
             <div style={fieldGroup}>
               <Label htmlFor="pet-breed" style={labelStyle}>Breed</Label>
               <Input id="pet-breed" value={breed} onChange={(e) => { setBreed(e.target.value); clearErr("breed"); }} placeholder="e.g. Aspin, Persian" error={errors.breed} aria-required="true" />
@@ -377,13 +407,13 @@ export default function RegisterPetPage() {
         </section>
 
         {/* ====== SECTION 1B: Location ====== */}
-        <section style={sectionStyle}>
-          <h2 style={sectionTitle}>Location — Barangay Address</h2>
+        <section style={sectionStyle} className="reg-section">
+          <h2 style={sectionTitle} className="reg-section-title">Location — Barangay Address</h2>
           <p style={{ margin: 0, fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)" }}>
             Data sourced from the official Philippine Standard Geographic Code (PSGC)
           </p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div className="reg-grid-2col">
             <div style={fieldGroup}>
               <Label htmlFor="loc-region" style={labelStyle}>Region</Label>
               <Select
@@ -411,7 +441,7 @@ export default function RegisterPetPage() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div className="reg-grid-2col">
             <div style={fieldGroup}>
               <Label htmlFor="loc-city" style={labelStyle}>City / Municipality</Label>
               <Select
@@ -442,10 +472,10 @@ export default function RegisterPetPage() {
         </section>
 
         {/* ====== SECTION 2: Identity ====== */}
-        <section style={sectionStyle}>
-          <h2 style={sectionTitle}>Section 2 — Identity & Documentation</h2>
+        <section style={sectionStyle} className="reg-section">
+          <h2 style={sectionTitle} className="reg-section-title">Section 2 — Identity & Documentation</h2>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div className="reg-grid-2col">
             <div style={fieldGroup}>
               <Label htmlFor="pet-dob" style={labelStyle}>Date of Birth</Label>
               <Input id="pet-dob" type="date" value={dob} onChange={(e) => setDob(e.target.value)} />
@@ -473,7 +503,7 @@ export default function RegisterPetPage() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div className="reg-grid-2col">
             <div style={fieldGroup}>
               <Label style={labelStyle}>Spayed / Neutered?</Label>
               <div style={{ display: "flex", gap: 8 }}>
@@ -502,6 +532,7 @@ export default function RegisterPetPage() {
           <div style={fieldGroup}>
             <Label style={labelStyle}>Pet Photo <span style={{ fontWeight: 400, color: "var(--color-text-muted)" }}>(JPEG/PNG, max 5MB)</span></Label>
             <div
+              className="reg-photo-drop"
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
               onDrop={(e) => { e.preventDefault(); setDragOver(false); handlePhoto(e.dataTransfer.files?.[0] ?? null); }}
@@ -537,8 +568,8 @@ export default function RegisterPetPage() {
         </section>
 
         {/* ====== SECTION 3: Owner Confirmation ====== */}
-        <section style={sectionStyle}>
-          <h2 style={sectionTitle}>Section 3 — Owner Confirmation</h2>
+        <section style={sectionStyle} className="reg-section">
+          <h2 style={sectionTitle} className="reg-section-title">Section 3 — Owner Confirmation</h2>
 
           <div style={{
             padding: 16, background: "var(--color-background)",

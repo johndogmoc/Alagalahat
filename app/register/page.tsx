@@ -12,6 +12,7 @@ import { Select } from "@/components/ui/select";
 import { toast } from "@/components/ui/sonner";
 import { getSupabaseClient } from "@/lib/supabase";
 import { getRegions, getProvinces, getCities, getBarangays as fetchBarangays } from "@/lib/barangayApi";
+import "./register.css";
 import {
   IconPaw,
   IconMail,
@@ -210,6 +211,9 @@ export default function RegisterPage() {
             phone: `+63${phone.replace(/^0/, "")}`,
             address: address.trim(),
             barangay,
+            region: locRegion,
+            province: locProvince,
+            city: locCity,
             role
           }
         }
@@ -283,7 +287,7 @@ export default function RegisterPage() {
       {/* Screen-reader live region */}
       <div ref={liveRef} aria-live="polite" className="sr-only" />
 
-      <div style={S.card}>
+      <div style={S.card} className="reg-card">
         {/* Header */}
         <div style={S.header}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -766,7 +770,7 @@ function StepPersonalDetails(p: Step2Props) {
       {/* Barangay — Cascading Selects */}
       <div style={S.fieldGroup}>
         <Label style={S.label}>Location (PSGC Official Data)</Label>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+        <div className="reg-loc-grid">
           <Select
             value={p.locRegion}
             onChange={(e) => { p.setLocRegion(e.target.value); clearErr("barangay"); }}
@@ -783,7 +787,7 @@ function StepPersonalDetails(p: Step2Props) {
             {p.provincesList.map((pr) => <option key={pr} value={pr}>{pr}</option>)}
           </Select>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 12 }}>
+        <div className="reg-loc-grid" style={{ marginTop: 12 }}>
           <Select
             value={p.locCity}
             onChange={(e) => { p.setLocCity(e.target.value); clearErr("barangay"); }}
@@ -1072,7 +1076,6 @@ const S: Record<string, React.CSSProperties> = {
     borderRadius: "var(--radius-xl)",
     border: "1px solid var(--color-border)",
     boxShadow: "var(--shadow-lg)",
-    padding: 32,
   },
   header: {
     marginBottom: 24
