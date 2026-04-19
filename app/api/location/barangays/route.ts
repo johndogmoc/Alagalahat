@@ -13,7 +13,10 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const res = await fetch(`${BASE_URL}/${encodeURIComponent(region)}/${encodeURIComponent(province)}/${encodeURIComponent(city)}/barangays`);
+    // CUSTOM OVERRIDE: If user queried City of Butuan under Agusan del Norte, route it correctly to the remote API
+    const remoteProvince = (province === "Agusan del Norte" && city === "City of Butuan") ? "City of Butuan" : province;
+
+    const res = await fetch(`${BASE_URL}/${encodeURIComponent(region)}/${encodeURIComponent(remoteProvince)}/${encodeURIComponent(city)}/barangays`);
     if (!res.ok) throw new Error(`API error: ${res.status}`);
     const data = await res.json();
     return NextResponse.json(data);
