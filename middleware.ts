@@ -19,7 +19,8 @@ function isPublicPath(pathname: string) {
     pathname === "/help" ||
     pathname.startsWith("/auth/callback") ||
     pathname.startsWith("/pet/") ||
-    pathname.startsWith("/care-guide")
+    pathname.startsWith("/care-guide") ||
+    pathname.startsWith("/api/location")
   );
 }
 
