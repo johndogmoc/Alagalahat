@@ -1,30 +1,24 @@
 /**
  * Barangay API Client
  * 
- * Uses the official Philippine Barangay API (PSGC-based) from
- * https://github.com/bendlikeabamboo/barangay-api
+ * Uses local Next.js API routes that proxy the official Philippine
+ * Barangay API (PSGC-based) to avoid CORS issues.
  * 
  * Provides cascading lookups: Regions → Provinces → Cities → Barangays
  */
 
-const BASE_URL = "https://barangay-api.hawitsu.xyz";
-
-async function apiFetch<T>(path: string): Promise<T> {
-  const res = await fetch(`${BASE_URL}${path}`);
-  if (!res.ok) throw new Error(`Barangay API error: ${res.status}`);
-  return res.json();
-}
-
 /** Return all Philippine regions */
 export async function getRegions(): Promise<string[]> {
-  return apiFetch<string[]>("/regions");
+  const res = await fetch("/api/location/regions");
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  return res.json();
 }
 
 /** Return provinces/HUCs under a region */
 export async function getProvinces(region: string): Promise<string[]> {
-  return apiFetch<string[]>(
-    `/${encodeURIComponent(region)}/provinces_and_highly_urbanized_cities`
-  );
+  const res = await fetch(`/api/location/provinces?region=${encodeURIComponent(region)}`);
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  return res.json();
 }
 
 /** Return cities/municipalities under a region + province */
@@ -32,9 +26,9 @@ export async function getCities(
   region: string,
   province: string
 ): Promise<string[]> {
-  return apiFetch<string[]>(
-    `/${encodeURIComponent(region)}/${encodeURIComponent(province)}/municipalities_and_cities`
-  );
+  const res = await fetch(`/api/location/cities?region=${encodeURIComponent(region)}&province=${encodeURIComponent(province)}`);
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  return res.json();
 }
 
 /** Return barangays under a region + province + city */
@@ -43,7 +37,7 @@ export async function getBarangays(
   province: string,
   city: string
 ): Promise<string[]> {
-  return apiFetch<string[]>(
-    `/${encodeURIComponent(region)}/${encodeURIComponent(province)}/${encodeURIComponent(city)}/barangays`
-  );
+  const res = await fetch(`/api/location/barangays?region=${encodeURIComponent(region)}&province=${encodeURIComponent(province)}&city=${encodeURIComponent(city)}`);
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  return res.json();
 }
