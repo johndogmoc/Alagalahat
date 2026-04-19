@@ -14,7 +14,16 @@ export async function GET(req: NextRequest) {
   try {
     const res = await fetch(`${BASE_URL}/${encodeURIComponent(region)}/${encodeURIComponent(province)}/municipalities_and_cities`);
     if (!res.ok) throw new Error(`API error: ${res.status}`);
-    const data = await res.json();
+    const data: string[] = await res.json();
+    
+    // OVERRIDE: Add "City of Butuan" to Agusan del Norte
+    if (province === "Agusan del Norte") {
+      if (!data.includes("City of Butuan")) {
+        data.push("City of Butuan");
+      }
+      data.sort((a, b) => a.localeCompare(b));
+    }
+    
     return NextResponse.json(data);
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : "Failed to fetch cities";

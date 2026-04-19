@@ -13,7 +13,13 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const res = await fetch(`${BASE_URL}/${encodeURIComponent(region)}/${encodeURIComponent(province)}/${encodeURIComponent(city)}/barangays`);
+    // OVERRIDE: If city is City of Butuan, the PSGC API actually stores it under the "City of Butuan" province.
+    let fetchProvince = province;
+    if (city === "City of Butuan") {
+      fetchProvince = "City of Butuan"; 
+    }
+
+    const res = await fetch(`${BASE_URL}/${encodeURIComponent(region)}/${encodeURIComponent(fetchProvince)}/${encodeURIComponent(city)}/barangays`);
     if (!res.ok) throw new Error(`API error: ${res.status}`);
     const data = await res.json();
     return NextResponse.json(data);

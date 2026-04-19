@@ -13,7 +13,11 @@ export async function GET(req: NextRequest) {
   try {
     const res = await fetch(`${BASE_URL}/${encodeURIComponent(region)}/provinces_and_highly_urbanized_cities`);
     if (!res.ok) throw new Error(`API error: ${res.status}`);
-    const data = await res.json();
+    let data: string[] = await res.json();
+    
+    // OVERRIDE: Remove "City of Butuan" from provinces so it can be added to Agusan del Norte
+    data = data.filter((p) => p !== "City of Butuan");
+    
     return NextResponse.json(data);
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : "Failed to fetch provinces";
