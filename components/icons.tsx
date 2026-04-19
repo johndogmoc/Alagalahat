@@ -130,6 +130,8 @@ export const IconChevronRight = makeIcon("M9 18l6-6-6-6");
 
 export const IconCheck = makeIcon("M20 6L9 17l-5-5");
 
+export const IconPlus = makeIcon("M12 5v14M5 12h14");
+
 export const IconHome = multiPathIcon([
   "M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
   "M9 22V12h6v10"
@@ -196,3 +198,162 @@ export const IconSpinner = ({ size = 20, ...props }: IconProps) => (
     <path d="M21 12a9 9 0 1 1-6.219-8.56" />
   </svg>
 );
+
+export const IconMessageCircle = multiPathIcon([
+  "M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+]);
+
+export const IconMic = multiPathIcon([
+  "M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z",
+  "M19 10v2a7 7 0 0 1-14 0v-2",
+  "M12 19v4",
+  "M8 23h8"
+]);
+
+export const IconMicOff = multiPathIcon([
+  "margin M1 1l22 22",
+  "M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6",
+  "M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23",
+  "M12 19v4",
+  "M8 23h8"
+]);
+
+export const IconVolume2 = multiPathIcon([
+  "M11 5L6 9H2v6h4l5 4V5z",
+  "M15.54 8.46a5 5 0 0 1 0 7.07",
+  "M19.07 4.93a10 10 0 0 1 0 14.14"
+]);
+
+export const IconSend = multiPathIcon([
+  "M22 2L11 13",
+  "M22 2l-7 20-4-9-9-4 20-7z"
+]);
+
+export const IconDownload = multiPathIcon([
+  "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4",
+  "M7 10l5 5 5-5",
+  "M12 15V3"
+]);
+
+export const IconPrinter = multiPathIcon([
+  "M6 9V2h12v7",
+  "M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2",
+  "M6 14h12v8H6z"
+]);
+
+export const IconQrCode = ({ size = 20, ...props }: IconProps) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+    <rect x="2" y="2" width="8" height="8" rx="1" />
+    <rect x="14" y="2" width="8" height="8" rx="1" />
+    <rect x="2" y="14" width="8" height="8" rx="1" />
+    <path d="M14 14h2v2h-2zM20 14h2v2h-2zM14 20h2v2h-2zM20 20h2v2h-2zM17 17h2v2h-2z" />
+  </svg>
+);
+
+export const IconClock = multiPathIcon([
+  "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z",
+  "M12 6v6l4 2"
+]);
+
+export const IconFilter = multiPathIcon([
+  "M22 3H2l8 9.46V19l4 2v-8.54L22 3z"
+]);
+
+export const IconGlobe = multiPathIcon([
+  "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z",
+  "M2 12h20",
+  "M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"
+]);
+
+export const IconSmartphone = multiPathIcon([
+  "M17 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z",
+  "M12 18h.01"
+]);
+
+export const IconTrash = multiPathIcon([
+  "M3 6h18",
+  "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2",
+  "M10 11v6",
+  "M14 11v6"
+]);
+
+export const IconCamera = multiPathIcon([
+  "M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z",
+  "M12 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
+]);
+
+export const IconMonitor = multiPathIcon([
+  "M2 3h20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z",
+  "M8 21h8",
+  "M12 17v4"
+]);
+
+export const IconUpload = multiPathIcon([
+  "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4",
+  "M17 8l-5-5-5 5",
+  "M12 3v12"
+]);
+
+export const IconKey = multiPathIcon([
+  "M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"
+]);
+
+export const IconMap = multiPathIcon([
+  "M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z",
+  "M8 2v16",
+  "M16 6v16"
+]);
+
+export const IconSliders = multiPathIcon([
+  "M4 21v-7",
+  "M4 10V3",
+  "M12 21v-9",
+  "M12 8V3",
+  "M20 21v-5",
+  "M20 12V3",
+  "M1 14h6",
+  "M9 8h6",
+  "M17 16h6"
+]);
+
+export const IconDatabase = multiPathIcon([
+  "M12 2C6.48 2 2 3.79 2 6v12c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4z",
+  "M2 12c0 2.21 4.48 4 10 4s10-1.79 10-4",
+  "M2 6c0 2.21 4.48 4 10 4s10-1.79 10-4"
+]);
+
+export const IconExternalLink = multiPathIcon([
+  "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6",
+  "M15 3h6v6",
+  "M10 14L21 3"
+]);
+
+export const IconShare2 = multiPathIcon([
+  "M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8",
+  "M16 6l-4-4-4 4",
+  "M12 2v13"
+]);
+
+export const IconFlag = multiPathIcon([
+  "M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z",
+  "M4 22v-7"
+]);
+
+export const IconLink2 = multiPathIcon([
+  "M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71",
+  "M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+]);
+
+export const IconTrash2 = multiPathIcon([
+  "M3 6h18",
+  "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6",
+  "M10 11v6",
+  "M14 11v6"
+]);
+
+export const IconMoreVertical = multiPathIcon([
+  "M12 5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z",
+  "M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z",
+  "M12 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
+]);
+

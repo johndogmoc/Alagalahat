@@ -1,4 +1,4 @@
-export type FilingUserRole = "Owner" | "Staff" | "Admin";
+export type FilingUserRole = "Owner" | "Staff" | "Admin" | "SuperAdmin";
 export type LostPetReportStatus = "Pending" | "Active" | "Resolved" | "Archived";
 
 export interface LostPetRegistrationSnapshot {
@@ -24,5 +24,11 @@ export interface LostPetReport {
   status: LostPetReportStatus;
   createdAt: string; // ISO datetime
   updatedAt: string; // ISO datetime
+  latitude?: number | null;
+  longitude?: number | null;
+  petBehavior?: string | null;
+  rewardOffered?: string | null;
+  specificPurok?: string | null;
+  alternateContact?: string | null;
 }
 

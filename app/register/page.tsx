@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { toast } from "@/components/ui/sonner";
 import { getSupabaseClient } from "@/lib/supabase";
+import { getRegions, getProvinces, getCities, getBarangays as fetchBarangays } from "@/lib/barangayApi";
 import {
   IconPaw,
   IconMail,
@@ -29,12 +30,6 @@ import {
    Constants
    ============================================ */
 const STEPS = ["Account Info", "Personal Details", "Confirmation"] as const;
-
-const BARANGAYS = [
-  "Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4", "Barangay 5",
-  "Barangay 6", "Barangay 7", "Barangay 8", "Barangay 9", "Barangay 10",
-  "Poblacion", "San Jose", "San Miguel", "Santa Cruz", "Santo Niño"
-];
 
 /* ============================================
    Password strength util
@@ -80,6 +75,16 @@ export default function RegisterPage() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
 
+  // Location API state
+  const [locRegion, setLocRegion] = useState("");
+  const [locProvince, setLocProvince] = useState("");
+  const [locCity, setLocCity] = useState("");
+  const [regionsList, setRegionsList] = useState<string[]>([]);
+  const [provincesList, setProvincesList] = useState<string[]>([]);
+  const [citiesList, setCitiesList] = useState<string[]>([]);
+  const [barangaysList, setBarangaysList] = useState<string[]>([]);
+  const [locLoading, setLocLoading] = useState("");
+
   /* --- Errors --- */
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -101,6 +106,39 @@ export default function RegisterPage() {
       liveRef.current.textContent = `Step ${step + 1} of ${STEPS.length}: ${STEPS[step]}`;
     }
   }, [step]);
+
+  // Fetch regions on mount
+  useEffect(() => {
+    setLocLoading("regions");
+    getRegions().then(setRegionsList).catch(() => setRegionsList([])).finally(() => setLocLoading(""));
+  }, []);
+
+  // Fetch provinces when region changes
+  useEffect(() => {
+    setLocProvince(""); setLocCity(""); setBarangay("");
+    setProvincesList([]); setCitiesList([]); setBarangaysList([]);
+    if (!locRegion) return;
+    setLocLoading("provinces");
+    getProvinces(locRegion).then(setProvincesList).catch(() => setProvincesList([])).finally(() => setLocLoading(""));
+  }, [locRegion]);
+
+  // Fetch cities when province changes
+  useEffect(() => {
+    setLocCity(""); setBarangay("");
+    setCitiesList([]); setBarangaysList([]);
+    if (!locRegion || !locProvince) return;
+    setLocLoading("cities");
+    getCities(locRegion, locProvince).then(setCitiesList).catch(() => setCitiesList([])).finally(() => setLocLoading(""));
+  }, [locRegion, locProvince]);
+
+  // Fetch barangays when city changes
+  useEffect(() => {
+    setBarangay("");
+    setBarangaysList([]);
+    if (!locRegion || !locProvince || !locCity) return;
+    setLocLoading("barangays");
+    fetchBarangays(locRegion, locProvince, locCity).then(setBarangaysList).catch(() => setBarangaysList([])).finally(() => setLocLoading(""));
+  }, [locRegion, locProvince, locCity]);
 
   /* --- Photo handler --- */
   const handlePhoto = useCallback((file: File | null) => {
@@ -348,6 +386,14 @@ export default function RegisterPage() {
               phone={phone} setPhone={setPhone}
               address={address} setAddress={setAddress}
               barangay={barangay} setBarangay={setBarangay}
+              locRegion={locRegion} setLocRegion={setLocRegion}
+              locProvince={locProvince} setLocProvince={setLocProvince}
+              locCity={locCity} setLocCity={setLocCity}
+              regionsList={regionsList}
+              provincesList={provincesList}
+              citiesList={citiesList}
+              barangaysList={barangaysList}
+              locLoading={locLoading}
               role={role} setRole={setRole}
               photoPreview={photoPreview}
               dragOver={dragOver} setDragOver={setDragOver}
@@ -567,6 +613,14 @@ interface Step2Props {
   phone: string; setPhone: (v: string) => void;
   address: string; setAddress: (v: string) => void;
   barangay: string; setBarangay: (v: string) => void;
+  locRegion: string; setLocRegion: (v: string) => void;
+  locProvince: string; setLocProvince: (v: string) => void;
+  locCity: string; setLocCity: (v: string) => void;
+  regionsList: string[];
+  provincesList: string[];
+  citiesList: string[];
+  barangaysList: string[];
+  locLoading: string;
   role: "Owner" | "Staff" | ""; setRole: (v: "Owner" | "Staff" | "") => void;
   photoPreview: string | null;
   dragOver: boolean; setDragOver: (v: boolean) => void;
@@ -577,6 +631,46 @@ interface Step2Props {
 function StepPersonalDetails(p: Step2Props) {
   const clearErr = (key: string) => p.setErrors({ ...p.errors, [key]: "" });
   const fileRef = useRef<HTMLInputElement>(null);
+  const [geoLocating, setGeoLocating] = useState(false);
+
+  async function useCurrentLocation() {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser.");
+      return;
+    }
+    setGeoLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`,
+            { headers: { "Accept-Language": "en" } }
+          );
+          const data = await res.json();
+          if (data?.display_name) {
+            p.setAddress(data.display_name);
+            clearErr("address");
+            toast.success("Address auto-filled from your location!");
+          } else {
+            toast.error("Could not determine address from your location.");
+          }
+        } catch {
+          toast.error("Failed to fetch address. Please enter it manually.");
+        }
+        setGeoLocating(false);
+      },
+      (err) => {
+        setGeoLocating(false);
+        if (err.code === err.PERMISSION_DENIED) {
+          toast.error("Location access denied. Please allow location access or enter your address manually.");
+        } else {
+          toast.error("Could not get your location. Please try again.");
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -599,7 +693,7 @@ function StepPersonalDetails(p: Step2Props) {
             minHeight: 48,
             userSelect: "none"
           }}>
-            🇵🇭 +63
+             +63
           </div>
           <Input
             id="reg-phone"
@@ -625,24 +719,91 @@ function StepPersonalDetails(p: Step2Props) {
           error={p.errors.address}
           aria-required="true"
         />
+        <button
+          type="button"
+          onClick={useCurrentLocation}
+          disabled={geoLocating}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "8px 14px",
+            border: "1px solid var(--color-border)",
+            borderRadius: "var(--radius-md)",
+            background: "var(--color-background)",
+            color: "var(--color-secondary)",
+            fontSize: "var(--font-size-xs)",
+            fontWeight: 600,
+            cursor: geoLocating ? "wait" : "pointer",
+            transition: "all var(--transition-fast)",
+            fontFamily: "inherit",
+            width: "fit-content",
+            marginTop: 4,
+            opacity: geoLocating ? 0.7 : 1
+          }}
+          onMouseOver={(e) => { if (!geoLocating) (e.currentTarget.style.background = "var(--color-secondary)"); if (!geoLocating) (e.currentTarget.style.color = "#fff"); }}
+          onMouseOut={(e) => { e.currentTarget.style.background = "var(--color-background)"; e.currentTarget.style.color = "var(--color-secondary)"; }}
+          aria-label="Auto-fill address using your current location"
+        >
+          {geoLocating ? (
+            <>
+              <IconSpinner size={14} />
+              Detecting location…
+            </>
+          ) : (
+            <>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              Use my current location
+            </>
+          )}
+        </button>
         {p.errors.address && <p style={S.errMsg} role="alert">{p.errors.address}</p>}
       </div>
 
-      {/* Barangay */}
+      {/* Barangay — Cascading Selects */}
       <div style={S.fieldGroup}>
-        <Label htmlFor="reg-barangay" style={S.label}>Barangay</Label>
-        <Select
-          id="reg-barangay"
-          value={p.barangay}
-          onChange={(e) => { p.setBarangay(e.target.value); clearErr("barangay"); }}
-          error={p.errors.barangay}
-          aria-required="true"
-        >
-          <option value="">Select your barangay</option>
-          {BARANGAYS.map((b) => (
-            <option key={b} value={b}>{b}</option>
-          ))}
-        </Select>
+        <Label style={S.label}>Location (PSGC Official Data)</Label>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <Select
+            value={p.locRegion}
+            onChange={(e) => { p.setLocRegion(e.target.value); clearErr("barangay"); }}
+          >
+            <option value="">{p.locLoading === "regions" ? "Loading regions..." : "Select region"}</option>
+            {p.regionsList.map((r) => <option key={r} value={r}>{r}</option>)}
+          </Select>
+          <Select
+            value={p.locProvince}
+            onChange={(e) => { p.setLocProvince(e.target.value); clearErr("barangay"); }}
+            disabled={!p.locRegion || p.provincesList.length === 0}
+          >
+            <option value="">{p.locLoading === "provinces" ? "Loading..." : !p.locRegion ? "Select region first" : "Select province"}</option>
+            {p.provincesList.map((pr) => <option key={pr} value={pr}>{pr}</option>)}
+          </Select>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 12 }}>
+          <Select
+            value={p.locCity}
+            onChange={(e) => { p.setLocCity(e.target.value); clearErr("barangay"); }}
+            disabled={!p.locProvince || p.citiesList.length === 0}
+          >
+            <option value="">{p.locLoading === "cities" ? "Loading..." : !p.locProvince ? "Select province first" : "Select city"}</option>
+            {p.citiesList.map((c) => <option key={c} value={c}>{c}</option>)}
+          </Select>
+          <Select
+            id="reg-barangay"
+            value={p.barangay}
+            onChange={(e) => { p.setBarangay(e.target.value); clearErr("barangay"); }}
+            error={p.errors.barangay}
+            aria-required="true"
+            disabled={!p.locCity || p.barangaysList.length === 0}
+          >
+            <option value="">{p.locLoading === "barangays" ? "Loading..." : !p.locCity ? "Select city first" : "Select barangay"}</option>
+            {p.barangaysList.map((b) => <option key={b} value={b}>{b}</option>)}
+          </Select>
+        </div>
         {p.errors.barangay && <p style={S.errMsg} role="alert">{p.errors.barangay}</p>}
       </div>
 

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { Navbar } from "@/components/Navbar";
+import { AuthShell } from "@/components/AuthShell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -65,77 +65,73 @@ export default function NewPetPage() {
     }
 
     toast.success("Pet registration submitted. Staff/Admin will verify it.");
-    router.replace("/owner");
+    router.replace("/home");
   }
 
   return (
-    <div>
-      <Navbar />
-      <main className="container" style={{ paddingBlock: 24 }}>
-        <Card style={{ maxWidth: 760, marginInline: "auto" }}>
-          <CardHeader>
-            <CardTitle>Register a Pet</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={onSubmit} style={{ display: "grid", gap: 14 }}>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>
-                <div style={{ display: "grid", gap: 6 }}>
-                  <Label htmlFor="name">Pet name</Label>
-                  <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
-                </div>
-                <div style={{ display: "grid", gap: 6 }}>
-                  <Label htmlFor="species">Species</Label>
-                  <Select id="species" value={species} onChange={(e) => setSpecies(e.target.value as Species)}>
-                    <option value="Dog">Dog</option>
-                    <option value="Cat">Cat</option>
-                    <option value="Other">Other</option>
-                  </Select>
-                </div>
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>
-                <div style={{ display: "grid", gap: 6 }}>
-                  <Label htmlFor="breed">Breed</Label>
-                  <Input id="breed" value={breed} onChange={(e) => setBreed(e.target.value)} />
-                </div>
-                <div style={{ display: "grid", gap: 6 }}>
-                  <Label htmlFor="color">Color</Label>
-                  <Input id="color" value={color} onChange={(e) => setColor(e.target.value)} />
-                </div>
-                <div style={{ display: "grid", gap: 6 }}>
-                  <Label htmlFor="size">Size</Label>
-                  <Input id="size" value={size} onChange={(e) => setSize(e.target.value)} placeholder="Small / Medium / Large" />
-                </div>
-              </div>
-
+    <AuthShell>
+      <Card style={{ maxWidth: 760 }}>
+        <CardHeader>
+          <CardTitle>Register a Pet</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={onSubmit} style={{ display: "grid", gap: 14 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>
               <div style={{ display: "grid", gap: 6 }}>
-                <Label htmlFor="photoUrl">Pet photo URL (optional)</Label>
-                <Input id="photoUrl" value={photoUrl} onChange={(e) => setPhotoUrl(e.target.value)} placeholder="https://..." />
+                <Label htmlFor="name">Pet name</Label>
+                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
               </div>
-
               <div style={{ display: "grid", gap: 6 }}>
-                <Label htmlFor="vaccinationDetails">Vaccination details (optional)</Label>
-                <Textarea
-                  id="vaccinationDetails"
-                  value={vaccinationDetails}
-                  onChange={(e) => setVaccinationDetails(e.target.value)}
-                  placeholder="Rabies vaccine date, etc."
-                />
+                <Label htmlFor="species">Species</Label>
+                <Select id="species" value={species} onChange={(e) => setSpecies(e.target.value as Species)}>
+                  <option value="Dog">Dog</option>
+                  <option value="Cat">Cat</option>
+                  <option value="Other">Other</option>
+                </Select>
               </div>
+            </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, flexWrap: "wrap" }}>
-                <Button type="button" variant="outline" onClick={() => router.back()}>
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={!canSubmit || isSubmitting}>
-                  {isSubmitting ? "Submitting..." : "Submit registration"}
-                </Button>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>
+              <div style={{ display: "grid", gap: 6 }}>
+                <Label htmlFor="breed">Breed</Label>
+                <Input id="breed" value={breed} onChange={(e) => setBreed(e.target.value)} />
               </div>
-            </form>
-          </CardContent>
-        </Card>
-      </main>
-    </div>
+              <div style={{ display: "grid", gap: 6 }}>
+                <Label htmlFor="color">Color</Label>
+                <Input id="color" value={color} onChange={(e) => setColor(e.target.value)} />
+              </div>
+              <div style={{ display: "grid", gap: 6 }}>
+                <Label htmlFor="size">Size</Label>
+                <Input id="size" value={size} onChange={(e) => setSize(e.target.value)} placeholder="Small / Medium / Large" />
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gap: 6 }}>
+              <Label htmlFor="photoUrl">Pet photo URL (optional)</Label>
+              <Input id="photoUrl" value={photoUrl} onChange={(e) => setPhotoUrl(e.target.value)} placeholder="https://..." />
+            </div>
+
+            <div style={{ display: "grid", gap: 6 }}>
+              <Label htmlFor="vaccinationDetails">Vaccination details (optional)</Label>
+              <Textarea
+                id="vaccinationDetails"
+                value={vaccinationDetails}
+                onChange={(e) => setVaccinationDetails(e.target.value)}
+                placeholder="Rabies vaccine date, etc."
+              />
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, flexWrap: "wrap" }}>
+              <Button type="button" variant="outline" onClick={() => router.back()}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={!canSubmit || isSubmitting}>
+                {isSubmitting ? "Submitting..." : "Submit registration"}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </AuthShell>
   );
 }
-

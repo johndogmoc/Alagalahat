@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
-import { AccessibilityControls } from "@/components/AccessibilityControls";
 import {
   IconPaw,
   IconBell,
@@ -13,19 +12,21 @@ import {
   IconX,
   IconHome,
   IconSearch,
-  IconClipboard,
   IconAlertTriangle,
   IconLogOut,
   IconSettings,
-  IconChevronDown
+  IconChevronDown,
+  IconHelpCircle
 } from "@/components/icons";
 import { getSupabaseClient } from "@/lib/supabase";
 
 const navLinks = [
-  { href: "/dashboard", label: "Dashboard", icon: IconHome },
+  { href: "/home", label: "Home", icon: IconHome },
   { href: "/pets", label: "My Pets", icon: IconPaw },
   { href: "/lost-pets", label: "Lost Pets", icon: IconAlertTriangle },
-  { href: "/search", label: "Reports", icon: IconClipboard }
+  { href: "/search", label: "Search", icon: IconSearch },
+  { href: "/care-guide", label: "Care Guide", icon: IconHelpCircle },
+  { href: "/watchlist", label: "Watchlist", icon: IconBell }
 ];
 
 export function Navbar() {
@@ -40,12 +41,12 @@ export function Navbar() {
     let mounted = true;
     const supabase = getSupabaseClient();
 
-    supabase.auth.getUser().then(({ data }) => {
+    supabase.auth.getUser().then(({ data }: { data: { user: { email?: string } | null } }) => {
       if (!mounted) return;
       setEmail(data.user?.email ?? null);
     });
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((_event: string, session: { user?: { email?: string } } | null) => {
       setEmail(session?.user?.email ?? null);
     });
 
@@ -104,20 +105,23 @@ export function Navbar() {
           position: "sticky",
           top: 0,
           zIndex: 100,
-          background: "var(--color-card)",
-          borderBottom: scrolled ? "1px solid var(--color-border)" : "1px solid transparent",
-          boxShadow: scrolled ? "var(--shadow-sm)" : "none",
-          transition: "border-color var(--transition-fast), box-shadow var(--transition-fast)"
+          background: "#1c2536",
+          borderBottom: scrolled ? "1px solid rgba(255,255,255,0.08)" : "1px solid transparent",
+          transition: "background var(--transition-fast), border-color var(--transition-fast)"
         }}
       >
         <div
-          className="container"
+          className="navbar-content"
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             height: "var(--navbar-height)",
-            gap: 16
+            gap: 16,
+            width: "100%",
+            maxWidth: 1200,
+            marginInline: "auto",
+            padding: "0 40px"
           }}
         >
           {/* Left — Logo */}
@@ -129,7 +133,7 @@ export function Navbar() {
               gap: 10,
               fontWeight: 700,
               fontSize: "var(--font-size-lg)",
-              color: "var(--color-primary)",
+              color: "#fff",
               textDecoration: "none",
               flexShrink: 0,
               minHeight: 44,
@@ -144,7 +148,7 @@ export function Navbar() {
               width: 36,
               height: 36,
               borderRadius: "var(--radius-md)",
-              background: "var(--color-primary)",
+              background: "#3B82F6",
               color: "#fff"
             }}>
               <IconPaw size={20} />
@@ -158,12 +162,11 @@ export function Navbar() {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 4
+              gap: 12
             }}
             className="desktop-nav"
           >
             {navLinks.map((link) => {
-              const LinkIcon = link.icon;
               return (
                 <Link
                   key={link.href}
@@ -171,26 +174,24 @@ export function Navbar() {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 6,
-                    padding: "8px 14px",
-                    borderRadius: "var(--radius-md)",
-                    fontSize: "var(--font-size-sm)",
-                    fontWeight: 500,
-                    color: "var(--color-text-muted)",
+                    padding: "8px 12px",
+                    borderRadius: "8px",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: "rgba(255,255,255,0.7)",
                     transition: "all var(--transition-fast)",
                     textDecoration: "none",
-                    minHeight: 44
+                    whiteSpace: "nowrap",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "var(--color-background)";
-                    e.currentTarget.style.color = "var(--color-primary)";
+                    e.currentTarget.style.color = "#fff";
+                    e.currentTarget.style.background = "rgba(255,255,255,0.05)";
                   }}
                   onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "rgba(255,255,255,0.7)";
                     e.currentTarget.style.background = "transparent";
-                    e.currentTarget.style.color = "var(--color-text-muted)";
                   }}
                 >
-                  <LinkIcon size={16} />
                   <span>{link.label}</span>
                 </Link>
               );
@@ -198,57 +199,10 @@ export function Navbar() {
           </nav>
 
           {/* Right — Actions */}
-          <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-            {/* Accessibility Controls — desktop only */}
-            <div className="desktop-nav">
-              <AccessibilityControls />
-            </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
 
             {email ? (
               <>
-                {/* Notification Bell */}
-                <button
-                  type="button"
-                  aria-label="Notifications"
-                  style={{
-                    position: "relative",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: 44,
-                    height: 44,
-                    border: "none",
-                    borderRadius: "var(--radius-md)",
-                    background: "transparent",
-                    color: "var(--color-text-muted)",
-                    cursor: "pointer",
-                    transition: "all var(--transition-fast)"
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "var(--color-background)";
-                    e.currentTarget.style.color = "var(--color-primary)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "transparent";
-                    e.currentTarget.style.color = "var(--color-text-muted)";
-                  }}
-                >
-                  <IconBell size={20} />
-                  <span
-                    style={{
-                      position: "absolute",
-                      top: 8,
-                      right: 8,
-                      width: 8,
-                      height: 8,
-                      borderRadius: "50%",
-                      background: "var(--color-coral)",
-                      border: "2px solid var(--color-card)"
-                    }}
-                    aria-label="New notifications"
-                  />
-                </button>
-
                 {/* User Avatar + Dropdown */}
                 <div ref={dropdownRef} style={{ position: "relative" }}>
                   <button
@@ -396,9 +350,14 @@ export function Navbar() {
                 </div>
               </>
             ) : (
-              <Button variant="primary" size="sm" asChild href="/login">
-                Login
-              </Button>
+              <div className="desktop-nav" style={{ alignItems: "center", gap: 12 }}>
+                <Button size="sm" asChild href="/login" style={{ fontWeight: 600, background: "transparent", color: "rgba(255,255,255,0.9)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", padding: "0 16px" }}>
+                  <span>Log in</span>
+                </Button>
+                <Button size="sm" asChild href="/register" style={{ fontWeight: 600, background: "#3B82F6", color: "#fff", borderRadius: "8px", padding: "0 16px", border: "none" }}>
+                  <span>Sign up</span>
+                </Button>
+              </div>
             )}
 
             {/* Mobile Hamburger */}
@@ -517,17 +476,21 @@ export function Navbar() {
         </nav>
 
         <div style={{ padding: "16px 20px", borderTop: "1px solid var(--color-border)" }}>
-          <AccessibilityControls />
-          <div style={{ marginTop: 16 }}>
+          <div>
             {email ? (
-              <Button variant="outline" onClick={signOut} style={{ width: "100%" }}>
+              <Button variant="outline" onClick={signOut} style={{ width: "100%", justifyContent: "center" }}>
                 <IconLogOut size={16} />
                 <span>Sign out</span>
               </Button>
             ) : (
-              <Button variant="primary" asChild href="/login" style={{ width: "100%" }}>
-                Login
-              </Button>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <Button variant="primary" asChild href="/register" style={{ width: "100%", justifyContent: "center" }}>
+                  <span>Sign Up</span>
+                </Button>
+                <Button variant="outline" asChild href="/login" style={{ width: "100%", justifyContent: "center" }}>
+                  <span>Log In</span>
+                </Button>
+              </div>
             )}
           </div>
         </div>
@@ -542,6 +505,7 @@ export function Navbar() {
         @media (max-width: 768px) {
           .desktop-nav { display: none !important; }
           .mobile-nav-toggle { display: flex !important; }
+          .navbar-content { padding: 0 20px !important; }
         }
       `}</style>
     </>

@@ -1,14 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 import {
   IconHome, IconPaw, IconAlertTriangle, IconClipboard,
   IconUser, IconSettings, IconHelpCircle, IconChevronRight,
-  IconMenu, IconX, IconBarangaySeal, IconSearch
+  IconMenu, IconX, IconBarangaySeal, IconSearch, IconLogOut
 } from "@/components/icons";
+import { getSupabaseClient } from "@/lib/supabase";
 
 export type SidebarRole = "Owner" | "Staff" | "Admin";
 
@@ -40,8 +41,15 @@ interface SidebarProps {
 
 export function Sidebar({ role, userName }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  async function handleLogout() {
+    const supabase = getSupabaseClient();
+    await supabase.auth.signOut();
+    router.push("/login");
+  }
 
   const items = sidebarItems.filter((item) => item.roles.includes(role));
 
@@ -152,6 +160,25 @@ export function Sidebar({ role, userName }: SidebarProps) {
           <IconHelpCircle size={18} />
           {!collapsed && <span>Help & Support</span>}
         </Link>
+        <button
+          type="button"
+          onClick={handleLogout}
+          title={collapsed ? "Log Out" : undefined}
+          style={{
+            display: "flex", alignItems: "center", gap: 12,
+            padding: collapsed ? "10px" : "10px 14px",
+            borderRadius: "var(--radius-md)", fontSize: "var(--font-size-sm)",
+            color: "#E76F51", background: "transparent", border: "none",
+            cursor: "pointer", fontFamily: "inherit", fontWeight: 500,
+            justifyContent: collapsed ? "center" : "flex-start", minHeight: 44,
+            transition: "all var(--transition-fast)",
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(231,111,81,0.08)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+        >
+          <IconLogOut size={18} />
+          {!collapsed && <span>Log Out</span>}
+        </button>
       </div>
 
       {/* Collapse button (desktop only) */}

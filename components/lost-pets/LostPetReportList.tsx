@@ -106,7 +106,7 @@ export function LostPetReportList() {
       }
 
       const role = (user.user_metadata?.role as FilingUserRole | undefined) ?? "Owner";
-      if (role !== "Admin") {
+      if (role !== "Admin" && role !== "SuperAdmin") {
         router.replace("/");
         return;
       }

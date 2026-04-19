@@ -15,13 +15,12 @@ import {
   IconLock,
   IconEye,
   IconEyeOff,
-  IconShield,
   IconSyringe,
   IconAlertTriangle,
-  IconGoogle,
   IconBarangaySeal,
   IconSpinner,
-  IconCheck
+  IconCheck,
+  IconShield
 } from "@/components/icons";
 
 /* ---- Feature cards shown on left panel ---- */
@@ -107,23 +106,27 @@ export default function LoginPage() {
       return;
     }
 
-    toast.success("Welcome back!");
-    router.replace("/");
-  }
+    // Fetch user role and redirect to appropriate home page
+    const { data } = await supabase.auth.getUser();
+    const user = data.user;
+    const role = user?.user_metadata?.role as string | undefined;
 
-  async function signInWithGoogle() {
-    const supabase = getSupabaseClient();
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/` }
-    });
-    if (error) toast.error(error.message);
+    toast.success("Welcome back!");
+    
+    // Redirect based on role
+    if (role === "SuperAdmin" || role === "Admin") {
+      router.replace("/admin");
+    } else if (role === "Staff") {
+      router.replace("/staff");
+    } else {
+      router.replace("/home");
+    }
   }
 
   return (
-    <div style={styles.page}>
+    <div className="login-page" style={styles.page}>
       {/* ====== LEFT PANEL — Brand ====== */}
-      <div style={styles.leftPanel}>
+      <div className="login-left-panel" style={styles.leftPanel}>
         <div style={styles.leftContent}>
           {/* Decorative background shapes */}
           <div style={styles.bgCircle1} aria-hidden="true" />
@@ -177,7 +180,7 @@ export default function LoginPage() {
       </div>
 
       {/* ====== RIGHT PANEL — Form ====== */}
-      <div style={styles.rightPanel}>
+      <div className="login-right-panel" style={styles.rightPanel}>
         <div style={styles.formWrapper}>
           {/* Mobile logo (shown only on small screens) */}
           <div className="mobile-logo" style={styles.mobileLogo}>
@@ -340,31 +343,6 @@ export default function LoginPage() {
                 "Sign In"
               )}
             </Button>
-
-            {/* Divider */}
-            <div style={styles.divider}>
-              <span style={styles.dividerLine} />
-              <span style={styles.dividerText}>or</span>
-              <span style={styles.dividerLine} />
-            </div>
-
-            {/* Google Sign-In */}
-            <button
-              type="button"
-              onClick={signInWithGoogle}
-              style={styles.googleBtn}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "var(--color-primary)";
-                e.currentTarget.style.boxShadow = "var(--shadow-md)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "var(--color-border)";
-                e.currentTarget.style.boxShadow = "none";
-              }}
-            >
-              <IconGoogle size={20} />
-              <span>Sign in with Google</span>
-            </button>
           </form>
 
           {/* Bottom link */}
@@ -374,6 +352,37 @@ export default function LoginPage() {
               Register here
             </Link>
           </p>
+
+          {/* Admin login link */}
+          <div style={{ textAlign: "center", marginTop: 16 }} className="animate-fade-in stagger-4">
+            <Link
+              href="/login/admin"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                fontSize: "var(--font-size-sm)",
+                color: "var(--color-text-muted)",
+                textDecoration: "none",
+                fontWeight: 600,
+                padding: "8px 16px",
+                borderRadius: "var(--radius-md)",
+                border: "1px solid var(--color-border)",
+                transition: "all var(--transition-fast)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "var(--color-primary)";
+                e.currentTarget.style.color = "var(--color-primary)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "var(--color-border)";
+                e.currentTarget.style.color = "var(--color-text-muted)";
+              }}
+            >
+              <IconShield size={14} />
+              Sign in as Admin
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -469,7 +478,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 500,
     lineHeight: 1.5,
     opacity: 0.9,
-    marginBottom: 48,
     margin: 0,
     paddingBottom: 48,
     color: "#fff"
@@ -530,7 +538,8 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    padding: "var(--space-8)"
+    padding: "var(--space-8)",
+    background: "var(--color-background)"
   },
   formWrapper: {
     width: "100%",
@@ -590,11 +599,13 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     gap: 10,
     cursor: "pointer",
-    minHeight: 44
+    minHeight: 44,
+    flexShrink: 0
   },
   checkboxOuter: {
     position: "relative",
-    display: "inline-flex"
+    display: "inline-flex",
+    flexShrink: 0
   },
   checkboxHidden: {
     position: "absolute",
@@ -615,45 +626,17 @@ const styles: Record<string, React.CSSProperties> = {
   },
   forgotLink: {
     fontSize: "var(--font-size-sm)",
-    fontWeight: 500,
-    color: "var(--color-secondary)",
+    fontWeight: 600,
+    color: "var(--color-primary)",
     textDecoration: "none",
     minHeight: 44,
     display: "flex",
-    alignItems: "center"
-  },
-  divider: {
-    display: "flex",
     alignItems: "center",
-    gap: 16,
-    margin: "4px 0"
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    background: "var(--color-border)"
-  },
-  dividerText: {
-    fontSize: "var(--font-size-sm)",
-    color: "var(--color-text-muted)",
-    fontWeight: 500
-  },
-  googleBtn: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 10,
-    width: "100%",
-    height: 48,
-    border: "2px solid var(--color-border)",
-    borderRadius: "var(--radius-md)",
-    background: "var(--color-card)",
-    color: "var(--color-text)",
-    fontSize: "var(--font-size-sm)",
-    fontWeight: 600,
+    position: "relative",
+    zIndex: 10,
     cursor: "pointer",
-    transition: "all 200ms ease",
-    fontFamily: "inherit"
+    whiteSpace: "nowrap",
+    flexShrink: 0
   },
   bottomLink: {
     textAlign: "center",
@@ -662,7 +645,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: "var(--color-text-muted)"
   },
   registerLink: {
-    color: "var(--color-secondary)",
+    color: "var(--color-primary)",
     fontWeight: 600,
     textDecoration: "none"
   },

@@ -12,13 +12,17 @@ export function Footer() {
       }}
     >
       <div
-        className="container"
+        className="footer-content"
         style={{
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "space-between",
           alignItems: "center",
-          gap: "var(--space-4)"
+          gap: "var(--space-4)",
+          width: "100%",
+          maxWidth: 1200,
+          marginInline: "auto",
+          padding: "0 40px"
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
@@ -61,6 +65,11 @@ export function Footer() {
           </p>
         </div>
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .footer-content { padding: 0 20px !important; }
+        }
+      `}</style>
     </footer>
   );
 }

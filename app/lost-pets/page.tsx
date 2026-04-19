@@ -1,18 +1,21 @@
-import { Navbar } from "@/components/Navbar";
+"use client";
+
+import { useState } from "react";
+import { AuthShell } from "@/components/AuthShell";
 import { LostPetAnnouncementBoard } from "@/components/lost-pets/LostPetAnnouncementBoard";
 
 export default function LostPetsPage() {
   return (
-    <div>
-      <Navbar />
-      <header className="container" style={{ paddingTop: 24 }}>
-        <h1 style={{ margin: 0, fontSize: 24, fontWeight: 800 }}>Lost Pet Announcements</h1>
-        <p style={{ marginTop: 6, marginBottom: 0, color: "hsl(var(--muted-foreground))" }}>
-          Verified community alerts for missing pets. You must be logged in to view the board.
+    <AuthShell>
+      <div style={{ marginBottom: 32 }}>
+        <h1 style={{ margin: 0, fontSize: 32, fontWeight: 800, color: "var(--color-text)", letterSpacing: "-0.02em", fontFamily: "'Playfair Display', serif" }}>
+          Lost & Found Pet Reports
+        </h1>
+        <p style={{ marginTop: 8, marginBottom: 0, color: "var(--color-text-muted)", fontSize: "var(--font-size-base)", fontFamily: "'DM Sans', sans-serif" }}>
+          Community alerts for missing and found pets in Butuan City. Help reunite them with their families.
         </p>
-      </header>
+      </div>
       <LostPetAnnouncementBoard />
-    </div>
+    </AuthShell>
   );
 }
-

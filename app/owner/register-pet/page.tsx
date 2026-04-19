@@ -12,15 +12,16 @@ import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/sonner";
 import { getSupabaseClient } from "@/lib/supabase";
+import { getRegions, getProvinces, getCities, getBarangays } from "@/lib/barangayApi";
 import {
   IconPaw, IconCheck, IconSpinner, IconUser, IconX, IconClipboard
 } from "@/components/icons";
 
 /* ============================================ */
 const SPECIES = [
-  { value: "Dog", label: "Dog", emoji: "🐕" },
-  { value: "Cat", label: "Cat", emoji: "🐈" },
-  { value: "Other", label: "Other", emoji: "🐾" }
+  { value: "Dog", label: "Dog", emoji: "" },
+  { value: "Cat", label: "Cat", emoji: "" },
+  { value: "Other", label: "Other", emoji: "" }
 ];
 
 const SIZES = ["Small", "Medium", "Large", "Extra Large"];
@@ -46,6 +47,17 @@ export default function RegisterPetPage() {
   const [colorMarkings, setColorMarkings] = useState("");
   const [size, setSize] = useState("");
 
+  // Location (Barangay API)
+  const [region, setRegion] = useState("");
+  const [province, setProvince] = useState("");
+  const [city, setCity] = useState("");
+  const [barangay, setBarangay] = useState("");
+  const [regions, setRegions] = useState<string[]>([]);
+  const [provinces, setProvinces] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [barangays, setBarangays] = useState<string[]>([]);
+  const [locationLoading, setLocationLoading] = useState<string>("");
+
   // Section 2: Identity
   const [dob, setDob] = useState("");
   const [sex, setSex] = useState("");
@@ -55,10 +67,7 @@ export default function RegisterPetPage() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
 
-  // Section 3: Vaccination
-  const [hasVaccination, setHasVaccination] = useState(false);
-  const [vaccines, setVaccines] = useState<VaccineRow[]>([]);
-  const [certFile, setCertFile] = useState<File | null>(null);
+
 
   // Section 4: Confirmation
   const [confirmed, setConfirmed] = useState(false);
@@ -86,8 +95,8 @@ export default function RegisterPetPage() {
 
   useEffect(() => {
     const supabase = getSupabaseClient();
-    supabase.auth.getUser().then(({ data }) => {
-      const u = data.user;
+    supabase.auth.getUser().then(({ data }: { data: { user: { id: string; email?: string; user_metadata?: Record<string, string> } | null } | null }) => {
+      const u = data?.user;
       if (u) {
         setUserName(u.user_metadata?.full_name || u.email?.split("@")[0] || "Pet Owner");
         setUserId(u.id);
@@ -95,6 +104,51 @@ export default function RegisterPetPage() {
       }
     });
   }, []);
+
+  // Fetch regions on mount
+  useEffect(() => {
+    setLocationLoading("regions");
+    getRegions()
+      .then(setRegions)
+      .catch(() => setRegions([]))
+      .finally(() => setLocationLoading(""));
+  }, []);
+
+  // Fetch provinces when region changes
+  useEffect(() => {
+    setProvince(""); setCity(""); setBarangay("");
+    setProvinces([]); setCities([]); setBarangays([]);
+    if (!region) return;
+    setLocationLoading("provinces");
+    getProvinces(region)
+      .then(setProvinces)
+      .catch(() => setProvinces([]))
+      .finally(() => setLocationLoading(""));
+  }, [region]);
+
+  // Fetch cities when province changes
+  useEffect(() => {
+    setCity(""); setBarangay("");
+    setCities([]); setBarangays([]);
+    if (!region || !province) return;
+    setLocationLoading("cities");
+    getCities(region, province)
+      .then(setCities)
+      .catch(() => setCities([]))
+      .finally(() => setLocationLoading(""));
+  }, [region, province]);
+
+  // Fetch barangays when city changes
+  useEffect(() => {
+    setBarangay("");
+    setBarangays([]);
+    if (!region || !province || !city) return;
+    setLocationLoading("barangays");
+    getBarangays(region, province, city)
+      .then(setBarangays)
+      .catch(() => setBarangays([]))
+      .finally(() => setLocationLoading(""));
+  }, [region, province, city]);
 
   const handlePhoto = useCallback((file: File | null) => {
     if (!file) return;
@@ -113,17 +167,7 @@ export default function RegisterPetPage() {
     reader.readAsDataURL(file);
   }, []);
 
-  function addVaccineRow() {
-    setVaccines((prev) => [...prev, { vaccineName: "", dateGiven: "", nextDue: "", administeredBy: "" }]);
-  }
 
-  function updateVaccine(index: number, field: keyof VaccineRow, value: string) {
-    setVaccines((prev) => prev.map((v, i) => i === index ? { ...v, [field]: value } : v));
-  }
-
-  function removeVaccine(index: number) {
-    setVaccines((prev) => prev.filter((_, i) => i !== index));
-  }
 
   function validate(): boolean {
     const errs: Record<string, string> = {};
@@ -159,22 +203,30 @@ export default function RegisterPetPage() {
       // Generate registration number
       const rn = `BRG-${Date.now().toString(36).toUpperCase().slice(-6)}`;
 
-      const { error } = await supabase.from("pets").insert({
-        owner_user_id: userId,
-        owner_name: userName,
-        name: petName.trim(),
-        species,
-        breed: breed.trim(),
-        color_markings: colorMarkings.trim(),
-        size,
-        date_of_birth: dob || null,
-        sex,
-        spayed_neutered: spayedNeutered,
-        microchip_number: microchip.trim() || null,
-        photo_url: photoUrl || null,
-        registration_number: rn,
-        status: "Pending"
-      } as never);
+      const { data: insertedPet, error } = await supabase
+        .from("pets")
+        .insert({
+          owner_user_id: userId,
+          owner_name: userName,
+          name: petName.trim(),
+          species,
+          breed: breed.trim(),
+          color_markings: colorMarkings.trim(),
+          size,
+          date_of_birth: dob || null,
+          sex,
+          spayed_neutered: spayedNeutered,
+          microchip_number: microchip.trim() || null,
+          photo_url: photoUrl || null,
+          registration_number: rn,
+          status: "Pending",
+          barangay: barangay || null,
+          city: city || null,
+          province: province || null,
+          region: region || null
+        } as never)
+        .select("id")
+        .single();
 
       if (error) {
         toast.error(error.message);
@@ -182,19 +234,8 @@ export default function RegisterPetPage() {
         return;
       }
 
-      // Insert vaccinations
-      if (hasVaccination && vaccines.length > 0) {
-        const vaxInserts = vaccines
-          .filter((v) => v.vaccineName.trim())
-          .map((v) => ({
-            pet_id: "", // Would need the pet ID from insert response
-            vaccine_name: v.vaccineName.trim(),
-            date_given: v.dateGiven || null,
-            next_due_at: v.nextDue || null,
-            administered_by: v.administeredBy.trim() || null
-          }));
-        // Note: In production, you'd get the pet ID from the insert above
-      }
+      const petId = (insertedPet as { id: string } | null)?.id;
+
 
       setRegNumber(rn);
       setSuccess(true);
@@ -241,13 +282,12 @@ export default function RegisterPetPage() {
               setPetName(""); setSpecies(""); setBreed(""); setColorMarkings("");
               setSize(""); setDob(""); setSex(""); setSpayedNeutered(null);
               setMicrochip(""); setPhotoFile(null); setPhotoPreview(null);
-              setHasVaccination(false); setVaccines([]); setCertFile(null);
               setConfirmed(false); setSuccess(false); setRegNumber("");
             }}>
               Register Another Pet
             </Button>
-            <Button variant="primary" onClick={() => router.push("/owner")}>
-              Back to Dashboard
+            <Button variant="primary" onClick={() => router.push("/home")}>
+              Back to Home
             </Button>
           </div>
           <style>{`@keyframes drawCheck { to { stroke-dashoffset: 0; } }`}</style>
@@ -333,6 +373,71 @@ export default function RegisterPetPage() {
               })}
             </div>
             {errors.size && <p style={errStyle} role="alert">{errors.size}</p>}
+          </div>
+        </section>
+
+        {/* ====== SECTION 1B: Location ====== */}
+        <section style={sectionStyle}>
+          <h2 style={sectionTitle}>Location — Barangay Address</h2>
+          <p style={{ margin: 0, fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)" }}>
+            Data sourced from the official Philippine Standard Geographic Code (PSGC)
+          </p>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div style={fieldGroup}>
+              <Label htmlFor="loc-region" style={labelStyle}>Region</Label>
+              <Select
+                id="loc-region"
+                value={region}
+                onChange={(e) => { setRegion(e.target.value); clearErr("region"); }}
+              >
+                <option value="">{locationLoading === "regions" ? "Loading regions..." : "Select region"}</option>
+                {regions.map((r) => <option key={r} value={r}>{r}</option>)}
+              </Select>
+              {errors.region && <p style={errStyle} role="alert">{errors.region}</p>}
+            </div>
+            <div style={fieldGroup}>
+              <Label htmlFor="loc-province" style={labelStyle}>Province</Label>
+              <Select
+                id="loc-province"
+                value={province}
+                onChange={(e) => { setProvince(e.target.value); clearErr("province"); }}
+                disabled={!region || provinces.length === 0}
+              >
+                <option value="">{locationLoading === "provinces" ? "Loading..." : !region ? "Select region first" : "Select province"}</option>
+                {provinces.map((p) => <option key={p} value={p}>{p}</option>)}
+              </Select>
+              {errors.province && <p style={errStyle} role="alert">{errors.province}</p>}
+            </div>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div style={fieldGroup}>
+              <Label htmlFor="loc-city" style={labelStyle}>City / Municipality</Label>
+              <Select
+                id="loc-city"
+                value={city}
+                onChange={(e) => { setCity(e.target.value); clearErr("city"); }}
+                disabled={!province || cities.length === 0}
+              >
+                <option value="">{locationLoading === "cities" ? "Loading..." : !province ? "Select province first" : "Select city"}</option>
+                {cities.map((c) => <option key={c} value={c}>{c}</option>)}
+              </Select>
+              {errors.city && <p style={errStyle} role="alert">{errors.city}</p>}
+            </div>
+            <div style={fieldGroup}>
+              <Label htmlFor="loc-barangay" style={labelStyle}>Barangay</Label>
+              <Select
+                id="loc-barangay"
+                value={barangay}
+                onChange={(e) => { setBarangay(e.target.value); clearErr("barangay"); }}
+                disabled={!city || barangays.length === 0}
+              >
+                <option value="">{locationLoading === "barangays" ? "Loading..." : !city ? "Select city first" : "Select barangay"}</option>
+                {barangays.map((b) => <option key={b} value={b}>{b}</option>)}
+              </Select>
+              {errors.barangay && <p style={errStyle} role="alert">{errors.barangay}</p>}
+            </div>
           </div>
         </section>
 
@@ -431,73 +536,9 @@ export default function RegisterPetPage() {
           </div>
         </section>
 
-        {/* ====== SECTION 3: Vaccination ====== */}
+        {/* ====== SECTION 3: Owner Confirmation ====== */}
         <section style={sectionStyle}>
-          <h2 style={sectionTitle}>Section 3 — Vaccination Info</h2>
-
-          <div style={fieldGroup}>
-            <Label style={labelStyle}>Has this pet been vaccinated?</Label>
-            <div style={{ display: "flex", gap: 8 }}>
-              {[{ l: "Yes", v: true }, { l: "No", v: false }].map((opt) => (
-                <button key={opt.l} type="button" onClick={() => { setHasVaccination(opt.v); if (!opt.v) setVaccines([]); }} style={{
-                  flex: 1, padding: "10px", border: `2px solid ${hasVaccination === opt.v ? "var(--color-primary)" : "var(--color-border)"}`,
-                  borderRadius: "var(--radius-md)", background: hasVaccination === opt.v ? "rgba(27,79,138,0.04)" : "transparent",
-                  color: hasVaccination === opt.v ? "var(--color-primary)" : "var(--color-text)", fontWeight: 600,
-                  fontSize: "var(--font-size-sm)", cursor: "pointer", fontFamily: "inherit", minHeight: 44
-                }}>
-                  {opt.l}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {hasVaccination && (
-            <>
-              {vaccines.map((vax, i) => (
-                <div key={i} style={{
-                  border: "1px solid var(--color-border)", borderRadius: "var(--radius-lg)",
-                  padding: 16, display: "grid", gap: 12, position: "relative"
-                }}>
-                  <button type="button" onClick={() => removeVaccine(i)} aria-label="Remove vaccine" style={{
-                    position: "absolute", top: 8, right: 8, width: 32, height: 32,
-                    border: "none", background: "transparent", color: "var(--color-coral)",
-                    cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                    borderRadius: "var(--radius-sm)"
-                  }}>
-                    <IconX size={16} />
-                  </button>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                    <div style={fieldGroup}>
-                      <Label style={labelStyle}>Vaccine Name</Label>
-                      <Input value={vax.vaccineName} onChange={(e) => updateVaccine(i, "vaccineName", e.target.value)} placeholder="e.g. Anti-Rabies" />
-                    </div>
-                    <div style={fieldGroup}>
-                      <Label style={labelStyle}>Administered By</Label>
-                      <Input value={vax.administeredBy} onChange={(e) => updateVaccine(i, "administeredBy", e.target.value)} placeholder="Vet name or clinic" />
-                    </div>
-                  </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                    <div style={fieldGroup}>
-                      <Label style={labelStyle}>Date Given</Label>
-                      <Input type="date" value={vax.dateGiven} onChange={(e) => updateVaccine(i, "dateGiven", e.target.value)} />
-                    </div>
-                    <div style={fieldGroup}>
-                      <Label style={labelStyle}>Next Due Date</Label>
-                      <Input type="date" value={vax.nextDue} onChange={(e) => updateVaccine(i, "nextDue", e.target.value)} />
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <Button variant="outline" type="button" onClick={addVaccineRow} style={{ width: "100%" }}>
-                + Add Vaccine Record
-              </Button>
-            </>
-          )}
-        </section>
-
-        {/* ====== SECTION 4: Owner Confirmation ====== */}
-        <section style={sectionStyle}>
-          <h2 style={sectionTitle}>Section 4 — Owner Confirmation</h2>
+          <h2 style={sectionTitle}>Section 3 — Owner Confirmation</h2>
 
           <div style={{
             padding: 16, background: "var(--color-background)",

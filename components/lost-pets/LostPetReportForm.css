@@ -1,0 +1,979 @@
+/* Variables for Light/Dark mode sync */
+.lpr-wrapper {
+  --lpr-bg: var(--color-background, #FAFBFC);
+  --lpr-card: var(--color-card, #FFFFFF);
+  --lpr-border: var(--color-border, #D2D8E0);
+  --lpr-border-hover: #C5CDD4;
+  --lpr-text-primary: var(--color-text, #1A1A2E);
+  --lpr-text-secondary: var(--color-text-muted, #626877);
+  --lpr-text-muted: var(--color-text-light, #8B95A5);
+  --lpr-hover-bg: rgba(0, 0, 0, 0.04);
+  --lpr-input-bg: var(--color-input-bg, #FFFFFF);
+}
+
+[data-theme="dark"] .lpr-wrapper {
+  --lpr-bg: #0f172a;
+  --lpr-card: #1e293b;
+  --lpr-border: #334155;
+  --lpr-border-hover: #475569;
+  --lpr-text-primary: #f1f5f9;
+  --lpr-text-secondary: #e2e8f0;
+  --lpr-text-muted: #94a3b8;
+  --lpr-hover-bg: rgba(255,255,255,0.04);
+  --lpr-input-bg: #0f172a;
+}
+/* ===== Lost Pet Report Form — Multi-Step Dark Redesign ===== */
+
+/* ---------- Root wrapper ---------- */
+.lpr-wrapper {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+/* ---------- Header ---------- */
+.lpr-header {
+  background: linear-gradient(135deg, #0f2a4a 60%, #1a3a5c 100%);
+  border-radius: 16px 16px 0 0;
+  padding: 28px 32px 22px;
+  border-bottom: 3px solid #E76F51;
+  position: relative;
+  overflow: hidden;
+}
+
+.lpr-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(231,111,81,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.lpr-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lpr-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.lpr-header-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(231, 111, 81, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #E76F51;
+  flex-shrink: 0;
+}
+
+.lpr-header h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.lpr-header p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--lpr-text-muted);
+  font-weight: 400;
+}
+
+.lpr-close-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--lpr-text-muted);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.lpr-close-btn:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
+
+/* ---------- Body ---------- */
+.lpr-body {
+  background: var(--lpr-bg);
+  border: 1px solid var(--lpr-card);
+  border-top: none;
+  border-radius: 0 0 16px 16px;
+  padding: 0 0 28px;
+}
+
+/* ---------- Step Indicator ---------- */
+.lpr-stepper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 24px 28px;
+  gap: 0;
+  position: relative;
+}
+
+.lpr-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  max-width: 180px;
+}
+
+.lpr-step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.lpr-step-circle.inactive {
+  background: transparent;
+  border: 2px solid var(--lpr-border);
+  color: var(--lpr-text-muted);
+}
+.lpr-step-circle.active {
+  background: #3b82f6;
+  border: 2px solid #3b82f6;
+  color: #fff;
+  box-shadow: 0 0 0 6px rgba(59,130,246,0.15);
+}
+.lpr-step-circle.completed {
+  background: #22c55e;
+  border: 2px solid #22c55e;
+  color: #fff;
+}
+
+.lpr-step-label {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--lpr-text-muted);
+  text-align: center;
+  transition: color 0.3s;
+  letter-spacing: 0.01em;
+}
+
+.lpr-step.is-active .lpr-step-label {
+  color: var(--lpr-text-secondary);
+}
+.lpr-step.is-completed .lpr-step-label {
+  color: #22c55e;
+}
+
+.lpr-step-line {
+  position: absolute;
+  top: 20px;
+  height: 2px;
+  background: var(--lpr-border);
+  z-index: 0;
+}
+.lpr-step-line.filled {
+  background: #22c55e;
+}
+
+/* ---------- Step Content Container ---------- */
+.lpr-step-content {
+  padding: 0 28px;
+  animation: lprFadeSlide 0.35s ease;
+}
+@keyframes lprFadeSlide {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ---------- Section Card ---------- */
+.lpr-section {
+  background: var(--lpr-card);
+  border: 1px solid var(--lpr-border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.lpr-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--lpr-border);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--lpr-text-secondary);
+  letter-spacing: 0.01em;
+}
+
+.lpr-section-title .accent-bar {
+  width: 4px;
+  height: 20px;
+  border-radius: 2px;
+  background: #3b82f6;
+  flex-shrink: 0;
+}
+.lpr-section-title .accent-bar.coral {
+  background: #E76F51;
+}
+.lpr-section-title .accent-bar.green {
+  background: #22c55e;
+}
+.lpr-section-title .accent-bar.amber {
+  background: #E9C46A;
+}
+
+.lpr-section-subtitle {
+  margin: -10px 0 18px;
+  font-size: 12px;
+  color: var(--lpr-text-muted);
+  line-height: 1.5;
+}
+
+/* ---------- Form Groups ---------- */
+.lpr-form-group {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.lpr-form-group:last-child {
+  margin-bottom: 0;
+}
+
+.lpr-form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.lpr-form-row:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Labels ---------- */
+.lpr-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--lpr-text-muted);
+  margin-bottom: 2px;
+}
+.lpr-label .required {
+  color: #ef4444;
+  margin-left: 2px;
+}
+
+/* ---------- Inputs ---------- */
+.lpr-input,
+.lpr-select,
+.lpr-textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  background: var(--lpr-bg);
+  border: 1px solid var(--lpr-border);
+  border-radius: 8px;
+  color: var(--lpr-text-secondary);
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  box-sizing: border-box;
+}
+.lpr-input::placeholder,
+.lpr-textarea::placeholder {
+  color: var(--lpr-border-hover);
+}
+.lpr-input:focus,
+.lpr-select:focus,
+.lpr-textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+}
+.lpr-input[readonly] {
+  background: var(--lpr-card);
+  color: var(--lpr-text-muted);
+  cursor: default;
+}
+
+.lpr-input.with-icon {
+  padding-left: 40px;
+}
+
+.lpr-input-icon-wrapper {
+  position: relative;
+}
+.lpr-input-icon-wrapper .icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--lpr-border-hover);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.lpr-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M4.427 6.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 6H4.604a.25.25 0 00-.177.427z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.lpr-textarea {
+  min-height: 100px;
+  padding: 12px 14px;
+  resize: vertical;
+}
+
+/* ---------- Pet Card (Selected Pet Preview) ---------- */
+.lpr-pet-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(59,130,246,0.02));
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.lpr-pet-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid rgba(59,130,246,0.3);
+  flex-shrink: 0;
+  background: var(--lpr-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lpr-pet-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.lpr-pet-avatar .fallback {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--lpr-text-muted);
+}
+
+.lpr-pet-info {
+  flex: 1;
+  min-width: 0;
+}
+.lpr-pet-info h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--lpr-text-primary);
+}
+.lpr-pet-info .species-breed {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--lpr-text-muted);
+}
+.lpr-pet-info .reg-number {
+  margin: 6px 0 0;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.lpr-pet-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.lpr-pet-pill {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(255,255,255,0.05);
+  color: var(--lpr-text-muted);
+  border: 1px solid var(--lpr-border);
+}
+
+/* ---------- Photo Upload ---------- */
+.lpr-photo-upload {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.lpr-photo-preview {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--lpr-bg);
+  border: 2px dashed var(--lpr-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.lpr-photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.lpr-photo-preview span {
+  font-size: 11px;
+  color: var(--lpr-border-hover);
+  text-align: center;
+  padding: 4px;
+}
+
+/* ---------- Map Container ---------- */
+.lpr-map-container {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--lpr-border);
+  height: 300px;
+  margin-bottom: 4px;
+}
+.lpr-map-hint {
+  font-size: 11px;
+  color: var(--lpr-border-hover);
+  margin: 6px 0 0;
+  line-height: 1.4;
+}
+
+/* ---------- Summary Card ---------- */
+.lpr-summary-card {
+  background: var(--lpr-bg);
+  border: 1px solid var(--lpr-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.lpr-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 16px;
+  gap: 16px;
+  border-bottom: 1px solid rgba(51,65,85,0.5);
+}
+.lpr-summary-row:last-child {
+  border-bottom: none;
+}
+.lpr-summary-label {
+  font-size: 12px;
+  color: var(--lpr-text-muted);
+  font-weight: 500;
+  flex-shrink: 0;
+  min-width: 110px;
+}
+.lpr-summary-value {
+  font-size: 13px;
+  color: var(--lpr-text-secondary);
+  font-weight: 600;
+  text-align: right;
+  word-break: break-word;
+}
+
+/* ---------- Confirmation Checkbox ---------- */
+.lpr-confirm-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  background: rgba(59,130,246,0.05);
+  border: 1px solid rgba(59,130,246,0.15);
+  border-radius: 10px;
+  margin-top: 8px;
+}
+.lpr-confirm-row input[type="checkbox"] {
+  margin-top: 2px;
+  accent-color: #3b82f6;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.lpr-confirm-row label {
+  font-size: 13px;
+  color: var(--lpr-text-muted);
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+/* ---------- Footer Buttons ---------- */
+.lpr-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 28px 0;
+  gap: 12px;
+}
+
+.lpr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  font-family: inherit;
+}
+
+.lpr-btn-outline {
+  background: transparent;
+  border: 1px solid var(--lpr-border);
+  color: var(--lpr-text-muted);
+}
+.lpr-btn-outline:hover {
+  background: var(--lpr-hover-bg);
+  border-color: var(--lpr-border-hover);
+  color: var(--lpr-text-secondary);
+}
+
+.lpr-btn-primary {
+  background: #3b82f6;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.25);
+}
+.lpr-btn-primary:hover {
+  background: #2563eb;
+  box-shadow: 0 4px 12px rgba(59,130,246,0.35);
+}
+
+.lpr-btn-danger {
+  background: #DC2626;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(220,38,38,0.25);
+}
+.lpr-btn-danger:hover {
+  background: #b91c1c;
+}
+
+.lpr-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.lpr-btn-text {
+  background: transparent;
+  border: none;
+  color: var(--lpr-text-muted);
+  padding: 0 12px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+}
+.lpr-btn-text:hover {
+  color: var(--lpr-text-muted);
+}
+
+/* ---------- Loading State ---------- */
+.lpr-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 24px;
+  text-align: center;
+}
+.lpr-loading .spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--lpr-border);
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: lprSpin 0.8s linear infinite;
+}
+@keyframes lprSpin {
+  to { transform: rotate(360deg); }
+}
+.lpr-loading p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--lpr-text-muted);
+  font-weight: 500;
+}
+
+/* ---------- Empty prompt ---------- */
+.lpr-empty-prompt {
+  text-align: center;
+  padding: 36px 20px;
+  color: var(--lpr-border-hover);
+}
+.lpr-empty-prompt svg {
+  margin-bottom: 12px;
+  opacity: 0.4;
+}
+.lpr-empty-prompt p {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* ---------- Reward prefix ---------- */
+.lpr-peso-wrapper {
+  position: relative;
+}
+.lpr-peso-wrapper .prefix {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--lpr-text-muted);
+  pointer-events: none;
+}
+.lpr-peso-wrapper .lpr-input {
+  padding-left: 34px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .lpr-wrapper {
+    padding: 0 8px 32px;
+  }
+  .lpr-header {
+    padding: 20px 18px 16px;
+    border-radius: 12px 12px 0 0;
+  }
+  .lpr-header h1 {
+    font-size: 18px;
+  }
+  .lpr-step-content {
+    padding: 0 16px;
+  }
+  .lpr-section {
+    padding: 18px 16px;
+  }
+  .lpr-footer {
+    padding: 20px 16px 0;
+    flex-wrap: wrap;
+  }
+  .lpr-form-row {
+    grid-template-columns: 1fr;
+  }
+  .lpr-pet-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  .lpr-pet-pills {
+    justify-content: center;
+  }
+  .lpr-summary-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .lpr-summary-value {
+    text-align: left;
+  }
+  .lpr-stepper {
+    padding: 24px 12px 20px;
+  }
+  .lpr-step-label {
+    font-size: 10px;
+  }
+  .lpr-step-circle {
+    width: 34px;
+    height: 34px;
+    font-size: 13px;
+  }
+  .lpr-body {
+    border-radius: 0 0 12px 12px;
+  }
+  .lpr-map-container {
+    height: 240px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   Additional styles for Found Pet / shared form elements
+   ══════════════════════════════════════════════════════════ */
+
+.lpr-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+}
+.lpr-subtitle {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--lpr-text-muted);
+}
+
+/* ── Field wrapper ── */
+.lpr-field {
+  margin-bottom: 18px;
+}
+.lpr-field:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Radio Row (pill buttons) ── */
+.lpr-radio-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.lpr-radio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1.5px solid var(--lpr-border);
+  background: transparent;
+  color: var(--lpr-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.lpr-radio:hover {
+  border-color: var(--lpr-border-hover);
+  color: var(--lpr-text-secondary);
+  background: var(--lpr-hover-bg);
+}
+.lpr-radio.selected {
+  border-color: #3b82f6;
+  background: rgba(59,130,246,0.15);
+  color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.08);
+}
+
+/* ── Photo Dropzone ── */
+.lpr-photo-drop {
+  width: 100%;
+  min-height: 140px;
+  border: 2px dashed var(--lpr-border);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+.lpr-photo-drop:hover {
+  border-color: #3b82f6;
+  background-color: rgba(59,130,246,0.04);
+}
+
+/* ── Grid 2 columns ── */
+.lpr-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 540px) {
+  .lpr-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Confirmation ── */
+.lpr-confirm {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  background: rgba(59,130,246,0.05);
+  border: 1px solid rgba(59,130,246,0.15);
+  border-radius: 10px;
+  margin: 16px 28px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--lpr-text-muted);
+  line-height: 1.5;
+  user-select: none;
+}
+.lpr-checkbox {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--lpr-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  margin-top: 1px;
+}
+.lpr-checkbox.checked {
+  background: #3b82f6;
+  border-color: #3b82f6;
+}
+
+/* ── Navigation Row ── */
+.lpr-nav-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px 0;
+  gap: 12px;
+}
+
+/* ── Ghost Button ── */
+.lpr-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: var(--lpr-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-family: inherit;
+  transition: color 0.2s, background 0.2s;
+}
+.lpr-btn-ghost:hover {
+  color: var(--lpr-text-muted);
+  background: var(--lpr-hover-bg);
+}
+
+/* ── Primary + Submit ── */
+.lpr-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  font-family: inherit;
+  background: #3b82f6;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.25);
+}
+.lpr-btn-primary:hover {
+  background: #2563eb;
+  box-shadow: 0 4px 12px rgba(59,130,246,0.35);
+}
+.lpr-btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.lpr-btn-submit {
+  background: linear-gradient(135deg, #22c55e, #2a9d8f);
+  box-shadow: 0 2px 8px rgba(34,197,94,0.3);
+}
+.lpr-btn-submit:hover {
+  box-shadow: 0 4px 16px rgba(34,197,94,0.4);
+}
+
+/* ── Fade animation ── */
+.lpr-fade-in {
+  animation: lprFadeSlide 0.35s ease;
+}
+
+/* ── Stepper for Found Pet form ── */
+.lpr-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  max-width: 180px;
+}
+.lpr-step-active .lpr-step-circle {
+  background: #3b82f6;
+  border: 2px solid #3b82f6;
+  color: #fff;
+  box-shadow: 0 0 0 6px rgba(59,130,246,0.15);
+}
+.lpr-step-done .lpr-step-circle {
+  background: #22c55e;
+  border-color: #22c55e;
+  color: #fff;
+}
+.lpr-step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  background: transparent;
+  border: 2px solid var(--lpr-border);
+  color: var(--lpr-text-muted);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.lpr-step-label {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--lpr-text-muted);
+  text-align: center;
+}
+.lpr-step-active .lpr-step-label {
+  color: var(--lpr-text-secondary);
+}
+.lpr-step-done .lpr-step-label {
+  color: #22c55e;
+}
+.lpr-step-line {
+  position: absolute;
+  top: 20px;
+  left: calc(50% + 24px);
+  right: calc(-50% + 24px);
+  height: 2px;
+  background: var(--lpr-border);
+}

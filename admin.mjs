@@ -1,0 +1,1 @@
+import { createClient } from "@supabase/supabase-js"; const s = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY); async function run() { const {data, error} = await s.from("profiles").select("*"); console.log("Profiles:", data, error); } run();

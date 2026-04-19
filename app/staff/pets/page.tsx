@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Navbar } from "@/components/Navbar";
+import { AuthShell } from "@/components/AuthShell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -76,59 +76,55 @@ export default function StaffPetQueuePage() {
   }
 
   return (
-    <div>
-      <Navbar />
-      <main className="container" style={{ paddingBlock: 24 }}>
-        <Card>
-          <CardHeader className="flex-row items-center justify-between">
-            <CardTitle>Registration Queue</CardTitle>
-            <Button variant="outline" onClick={load} disabled={isLoading}>
-              {isLoading ? "Loading..." : "Refresh"}
-            </Button>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div style={{ display: "grid", gap: 10 }}>
-                <Skeleton className="h-10 w-full" />
-                <Skeleton className="h-10 w-full" />
-              </div>
-            ) : rows.length === 0 ? (
-              <div style={{ color: "hsl(var(--muted-foreground))" }}>No pending registrations.</div>
-            ) : (
-              <div style={{ display: "grid", gap: 14 }}>
-                {rows.map((p, idx) => (
-                  <div key={p.id} style={{ display: "grid", gap: 12 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-                      <div>
-                        <div style={{ fontWeight: 800 }}>
-                          {p.name}{" "}
-                          <span style={{ color: "hsl(var(--muted-foreground))", fontWeight: 600 }}>({p.species})</span>
-                        </div>
-                        <div style={{ fontSize: 13, color: "hsl(var(--muted-foreground))" }}>
-                          Owner: {p.owner_name} • Submitted: {new Date(p.created_at).toLocaleString()}
-                        </div>
+    <AuthShell>
+      <Card>
+        <CardHeader className="flex-row items-center justify-between">
+          <CardTitle>Registration Queue</CardTitle>
+          <Button variant="outline" onClick={load} disabled={isLoading}>
+            {isLoading ? "Loading..." : "Refresh"}
+          </Button>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div style={{ display: "grid", gap: 10 }}>
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ) : rows.length === 0 ? (
+            <div style={{ color: "hsl(var(--muted-foreground))" }}>No pending registrations.</div>
+          ) : (
+            <div style={{ display: "grid", gap: 14 }}>
+              {rows.map((p, idx) => (
+                <div key={p.id} style={{ display: "grid", gap: 12 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                    <div>
+                      <div style={{ fontWeight: 800 }}>
+                        {p.name}{" "}
+                        <span style={{ color: "hsl(var(--muted-foreground))", fontWeight: 600 }}>({p.species})</span>
                       </div>
-                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                        <Button variant="outline" asChild href={`/pets/${encodeURIComponent(p.id)}`}>
-                          Review
-                        </Button>
-                        <Button disabled={mutatingId === p.id} onClick={() => approve(p)}>
-                          Approve
-                        </Button>
-                        <Button disabled={mutatingId === p.id} variant="destructive" onClick={() => reject(p)}>
-                          Reject
-                        </Button>
+                      <div style={{ fontSize: 13, color: "hsl(var(--muted-foreground))" }}>
+                        Owner: {p.owner_name} • Submitted: {new Date(p.created_at).toLocaleString()}
                       </div>
                     </div>
-                    {idx !== rows.length - 1 ? <Separator /> : null}
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                      <Button variant="outline" asChild href={`/pets/${encodeURIComponent(p.id)}`}>
+                        Review
+                      </Button>
+                      <Button disabled={mutatingId === p.id} onClick={() => approve(p)}>
+                        Approve
+                      </Button>
+                      <Button disabled={mutatingId === p.id} variant="destructive" onClick={() => reject(p)}>
+                        Reject
+                      </Button>
+                    </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </main>
-    </div>
+                  {idx !== rows.length - 1 ? <Separator /> : null}
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </AuthShell>
   );
 }
-

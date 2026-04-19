@@ -139,7 +139,7 @@ export default function StaffDashboardPage() {
       {/* Welcome bar */}
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 28, fontWeight: 700, color: "var(--color-text)", margin: 0 }}>
-          {greeting}, {userName}! 📋
+          {greeting}, {userName}! 
         </h1>
         <p style={{ margin: 0, marginTop: 4, fontSize: "var(--font-size-sm)", color: "var(--color-text-muted)" }}>
           Barangay Staff Dashboard — Managing community pet records

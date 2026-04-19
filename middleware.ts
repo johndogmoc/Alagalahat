@@ -1,16 +1,26 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
-type Role = "Owner" | "Staff" | "Admin";
+type Role = "Owner" | "Staff" | "Admin" | "SuperAdmin";
 
 function getRoleFromUser(user: { user_metadata?: Record<string, unknown> } | null): Role | null {
   const role = user?.user_metadata?.role;
-  if (role === "Owner" || role === "Staff" || role === "Admin") return role;
+  if (role === "Owner" || role === "Staff" || role === "Admin" || role === "SuperAdmin") return role;
   return null;
 }
 
 function isPublicPath(pathname: string) {
-  return pathname === "/login" || pathname === "/register";
+  return (
+    pathname === "/" ||
+    pathname.startsWith("/login") ||
+    pathname === "/register" ||
+    pathname === "/forgot-password" ||
+    pathname === "/update-password" ||
+    pathname === "/help" ||
+    pathname.startsWith("/auth/callback") ||
+    pathname.startsWith("/pet/") ||
+    pathname.startsWith("/care-guide")
+  );
 }
 
 function isAuthRequiredPath(pathname: string) {
@@ -23,9 +33,9 @@ function isAuthRequiredPath(pathname: string) {
 }
 
 function roleHome(role: Role) {
-  if (role === "Admin") return "/admin";
+  if (role === "SuperAdmin" || role === "Admin") return "/admin";
   if (role === "Staff") return "/staff";
-  return "/owner";
+  return "/home";
 }
 
 export async function middleware(request: NextRequest) {
@@ -66,10 +76,11 @@ export async function middleware(request: NextRequest) {
   const user = data.user ?? null;
   const role = getRoleFromUser(user);
 
-  // Redirect logged-in users away from auth pages.
-  if (user && isPublicPath(pathname)) {
+  // Redirect logged-in users away from auth pages and the landing page.
+  const isAuthOnlyPage = pathname === "/login" || pathname === "/login/admin" || pathname === "/register" || pathname === "/";
+  if (user && isAuthOnlyPage) {
     const url = request.nextUrl.clone();
-    url.pathname = role ? roleHome(role) : "/owner";
+    url.pathname = role ? roleHome(role) : "/home";
     return NextResponse.redirect(url);
   }
 
@@ -80,28 +91,31 @@ export async function middleware(request: NextRequest) {
   }
 
   // Role gates
+  if (pathname.startsWith("/super-admin")) {
+    if (role !== "SuperAdmin") return NextResponse.redirect(new URL("/", request.url));
+  }
   if (pathname.startsWith("/admin")) {
-    if (role !== "Admin") return NextResponse.redirect(new URL("/", request.url));
+    if (role !== "SuperAdmin" && role !== "Admin") return NextResponse.redirect(new URL("/", request.url));
   }
   if (pathname.startsWith("/staff")) {
-    if (role !== "Staff" && role !== "Admin") return NextResponse.redirect(new URL("/", request.url));
+    if (role !== "Staff" && role !== "Admin" && role !== "SuperAdmin") return NextResponse.redirect(new URL("/", request.url));
   }
   if (pathname.startsWith("/owner")) {
-    if (role !== "Owner" && role !== "Admin") return NextResponse.redirect(new URL("/", request.url));
+    if (role !== "Owner" && role !== "Admin" && role !== "SuperAdmin") return NextResponse.redirect(new URL("/", request.url));
   }
 
   // Lost pets access
   if (pathname.startsWith("/lost-pets/admin")) {
-    if (role !== "Admin") return NextResponse.redirect(new URL("/", request.url));
+    if (role !== "SuperAdmin" && role !== "Admin") return NextResponse.redirect(new URL("/", request.url));
   }
   if (pathname.startsWith("/lost-pets/report")) {
-    if (role !== "Owner" && role !== "Staff" && role !== "Admin") return NextResponse.redirect(new URL("/", request.url));
+    if (role !== "Owner" && role !== "Staff" && role !== "Admin" && role !== "SuperAdmin") return NextResponse.redirect(new URL("/", request.url));
   }
 
   // Dashboard shortcut
   if (pathname === "/dashboard") {
     const url = request.nextUrl.clone();
-    url.pathname = role ? roleHome(role) : "/owner";
+    url.pathname = role ? roleHome(role) : "/home";
     return NextResponse.redirect(url);
   }
 

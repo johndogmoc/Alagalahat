@@ -1,9 +1,9 @@
-import { createClient } from "@supabase/supabase-js";
+import { createBrowserClient } from "@supabase/ssr";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-let _client: ReturnType<typeof createClient> | null = null;
+let _client: ReturnType<typeof createBrowserClient> | null = null;
 
 export function getSupabaseClient() {
   if (_client) return _client;
@@ -18,7 +18,7 @@ export function getSupabaseClient() {
     throw new Error("Supabase env vars are required.");
   }
 
-  _client = createClient(supabaseUrl, supabaseAnonKey);
+  _client = createBrowserClient(supabaseUrl, supabaseAnonKey);
   return _client;
 }
 
