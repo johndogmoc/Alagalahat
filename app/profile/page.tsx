@@ -89,13 +89,13 @@ export default function ProfilePage() {
           {/* Banner */}
           <div style={{
             height: 140,
-            background: "linear-gradient(135deg, var(--color-primary) 0%, #3B82F6 100%)",
+            background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%)",
             position: "relative"
           }}>
             <div style={{ position: "absolute", top: 16, right: 16 }}>
               <span style={{ 
                 background: "rgba(255,255,255,0.2)", backdropFilter: "blur(4px)", padding: "6px 12px", 
-                borderRadius: "100px", color: "#fff", fontSize: 13, fontWeight: 700 
+                borderRadius: "100px", color: "var(--color-primary-contrast, #fff)", fontSize: 13, fontWeight: 700 
               }}>
                 {role} Account
               </span>
