@@ -10,7 +10,6 @@ const ownerItems = [
   { href: "/home", label: "Feed", icon: IconHome },
   { href: "/pets", label: "My Pets", icon: IconPaw },
   { href: "/lost-pets", label: "Lost Pets", icon: IconAlertTriangle },
-  { href: "/vaccines", label: "Vaccines", icon: IconSyringe },
   { href: "/owner/settings", label: "More", icon: IconMenu }
 ] as const;
 
