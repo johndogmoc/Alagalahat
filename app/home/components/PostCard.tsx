@@ -1,9 +1,10 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import type { Post } from "../types";
 import { CommentSection } from "./CommentSection";
-import { IconPaw, IconShare2, IconFlag, IconLink2, IconCheck } from "@/components/icons";
+import { IconPaw, IconLink2 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
 

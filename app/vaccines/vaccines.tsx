@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { DashboardShell } from "@/components/DashboardShell";
 import { Button } from "@/components/ui/button";
-import { IconCheck, IconSyringe, IconAlertTriangle, IconClock, IconPlus } from "@/components/icons";
+import { IconCheck, IconAlertTriangle, IconClock, IconPlus } from "@/components/icons";
 import { getSupabaseClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
@@ -94,7 +94,6 @@ export default function VaccinesPage() {
     }
   }, [selectedPetId]);
 
-  const selectedPet = pets.find(p => p.id === selectedPetId);
   const getSpeciesEmoji = (species: string) => {
     switch (species.toLowerCase()) {
       case "dog": return "🐕";

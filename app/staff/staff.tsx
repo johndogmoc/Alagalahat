@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { getSupabaseClient } from "@/lib/supabase";
 import {
   IconClipboard, IconPaw, IconAlertTriangle, IconSyringe,
-  IconSearch, IconChevronRight, IconCheck, IconX, IconUser
+  IconSearch, IconChevronRight, IconCheck, IconUser
 } from "@/components/icons";
 
 interface PetRow {
@@ -38,8 +38,7 @@ export default function StaffDashboardPage() {
   const [searchResults, setSearchResults] = useState<PetRow[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [activities, setActivities] = useState<ActivityItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [activities] = useState<ActivityItem[]>([]);
 
   useEffect(() => {
     let mounted = true;
@@ -91,7 +90,7 @@ export default function StaffDashboardPage() {
         });
       }
 
-      setLoading(false);
+      // setLoading(false);
     }
     load();
     return () => { mounted = false; };

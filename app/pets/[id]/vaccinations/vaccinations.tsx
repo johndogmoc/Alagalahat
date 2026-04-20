@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 
 import { DashboardShell } from "@/components/DashboardShell";
@@ -13,7 +13,7 @@ import { toast } from "@/components/ui/sonner";
 import { getSupabaseClient } from "@/lib/supabase";
 import {
   IconSyringe, IconChevronRight, IconCheck, IconAlertTriangle,
-  IconClock, IconPaw
+  IconClock
 } from "@/components/icons";
 
 /* ---- Types ---- */
@@ -55,7 +55,6 @@ function relativeDate(dateStr: string): string {
 }
 
 export default function VaccinationsPage() {
-  const router = useRouter();
   const params = useParams<{ id: string }>();
   const petId = params?.id ?? "";
 
@@ -113,6 +112,7 @@ export default function VaccinationsPage() {
   useEffect(() => {
     if (!petId) return;
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [petId]);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {

@@ -7,7 +7,7 @@ import { LostPetAnnouncementCard } from "@/components/lost-pets/LostPetAnnouncem
 import { FoundPetAnnouncementCard, type FoundPetReport } from "@/components/lost-pets/FoundPetAnnouncementCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getSupabaseClient } from "@/lib/supabase";
-import type { LostPetReport, LostPetReportStatus, LostPetRegistrationSnapshot } from "@/lib/types/lostPet";
+import type { LostPetReport, LostPetRegistrationSnapshot } from "@/lib/types/lostPet";
 import { getWatchlistReportIds, toggleWatchlistReportId } from "@/lib/watchlist";
 import { OverviewMapLoader } from "@/components/OverviewMapLoader";
 

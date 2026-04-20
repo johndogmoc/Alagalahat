@@ -1,11 +1,12 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { IconPaw, IconAlertTriangle, IconCheck, IconSpinner, IconSyringe } from "@/components/icons";
+import { IconPaw, IconAlertTriangle, IconCheck, IconSpinner } from "@/components/icons";
 import { getSupabaseClient } from "@/lib/supabase";
 
 interface PetData {

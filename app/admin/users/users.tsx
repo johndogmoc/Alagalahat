@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/sonner";
 import { getSupabaseClient } from "@/lib/supabase";
-import { IconSearch, IconUser, IconShield, IconCheck, IconX, IconFilter } from "@/components/icons";
+import { IconSearch, IconUser, IconCheck, IconX } from "@/components/icons";
 
 type Role = "Owner" | "Staff" | "Admin";
 
@@ -52,6 +52,7 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function updateUser(id: string, patch: Partial<Pick<ProfileRow, "role" | "is_active">>) {
@@ -75,17 +76,6 @@ export default function AdminUsersPage() {
         return { bg: "#DBEAFE", text: "#0369A1", label: "Staff Member" };
       default:
         return { bg: "#ECFDF5", text: "#059669", label: "Pet Owner" };
-    }
-  };
-
-  const getRoleIcon = (role: Role) => {
-    switch (role) {
-      case "Admin":
-        return <IconShield size={16} />;
-      case "Staff":
-        return <IconShield size={16} />;
-      default:
-        return <IconUser size={16} />;
     }
   };
 

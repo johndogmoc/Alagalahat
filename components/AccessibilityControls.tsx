@@ -47,10 +47,10 @@ const themeOptions: { label: string; value: ThemeMode; icon: React.ReactNode }[]
  * A compact theme toggle (Light/Dark/Auto) designed for the dark navbar.
  * Used in: Landing page Navbar, HomeNavbar, Admin Sidebar.
  */
-export function ThemeToggle({ variant = "dark" }: { variant?: "dark" | "light" }) {
+export function ThemeToggle({ variant = "dark" }: { className?: string; variant?: "light" | "dark" }) {
   const { theme, setTheme } = useAccessibility();
-
-  const isDark = variant === "dark";
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _v = variant;
 
   return (
     <div

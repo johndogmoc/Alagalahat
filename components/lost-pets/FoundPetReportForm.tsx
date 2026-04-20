@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -41,7 +42,6 @@ export function FoundPetReportForm() {
   /* ── auth ── */
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [userId, setUserId] = useState("");
-  const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
 
   /* ── pet description ── */
@@ -94,7 +94,6 @@ export function FoundPetReportForm() {
 
       setUserId(user.id);
       const name = (user.user_metadata?.full_name as string) || user.email?.split("@")[0] || "";
-      setUserName(name);
       setFinderName(name);
       setUserEmail(user.email || "");
       setFinderContact(user.user_metadata?.phone || user.email || "");

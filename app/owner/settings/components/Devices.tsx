@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { SectionCard, ConfirmModal } from "./shared";
-import { IconSmartphone, IconMonitor } from "@/components/icons";
+import { IconSmartphone } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
 

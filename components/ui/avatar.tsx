@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import * as React from "react";
 
@@ -17,8 +18,8 @@ export function Avatar({ className, ...props }: AvatarProps) {
 
 export type AvatarImageProps = React.ImgHTMLAttributes<HTMLImageElement>;
 
-export function AvatarImage({ className, ...props }: AvatarImageProps) {
-  return <img className={cn("aspect-square h-full w-full object-cover", className)} {...props} />;
+export function AvatarImage({ className, alt, ...props }: AvatarImageProps) {
+  return <img className={cn("aspect-square h-full w-full object-cover", className)} alt={alt} {...props} />;
 }
 
 export type AvatarFallbackProps = React.HTMLAttributes<HTMLDivElement>;

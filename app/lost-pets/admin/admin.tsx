@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useState } from "react";
 
@@ -8,7 +9,7 @@ import { getSupabaseClient } from "@/lib/supabase";
 import { toast } from "@/components/ui/sonner";
 import {
   IconAlertTriangle, IconCheck, IconX, IconSearch,
-  IconPaw, IconClock, IconFilter, IconChevronRight
+  IconPaw, IconClock, IconChevronRight
 } from "@/components/icons";
 
 /* ---- Types ---- */

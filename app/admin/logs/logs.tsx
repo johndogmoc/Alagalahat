@@ -7,8 +7,7 @@ import { toast } from "@/components/ui/sonner";
 import { getSupabaseClient } from "@/lib/supabase";
 import {
   IconClipboard, IconPaw, IconAlertTriangle, IconUser,
-  IconCheck, IconSyringe, IconShield, IconClock, IconFilter,
-  IconSearch
+  IconSyringe, IconShield, IconSearch
 } from "@/components/icons";
 
 /* ---- Types ---- */

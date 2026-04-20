@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/sonner";
 import { getSupabaseClient } from "@/lib/supabase";
-import { IconMail, IconSpinner, IconPaw, IconCheck } from "@/components/icons";
+import { IconMail, IconSpinner, IconPaw } from "@/components/icons";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();

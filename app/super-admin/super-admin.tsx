@@ -43,7 +43,6 @@ export default function SuperAdminDashboardPage() {
   });
   const [pendingItems, setPendingItems] = useState<PendingItem[]>([]);
   const [recentUsers, setRecentUsers] = useState<RecentUser[]>([]);
-  const [loading, setLoading] = useState(true);
 
   async function handleAction(id: string, type: "pet" | "lost_report" | "staff_account", action: "approve" | "reject") {
     const supabase = getSupabaseClient();
@@ -187,9 +186,7 @@ export default function SuperAdminDashboardPage() {
         if (isAbortError(error)) return;
         console.error("Failed to load super admin dashboard data.", error);
       } finally {
-        if (mounted) {
-          setLoading(false);
-        }
+        // cleanup if needed
       }
     }
 

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { SectionCard, PasswordInput, ConfirmModal } from "./shared";
-import { IconLock, IconCheck, IconShield } from "@/components/icons";
+import { IconLock, IconCheck } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
 
@@ -36,7 +36,6 @@ export function SecuritySection({ userEmail }: { userEmail: string }) {
   const [confirmPw, setConfirmPw] = useState("");
   const [saving, setSaving] = useState(false);
   const [twoFA, setTwoFA] = useState(false);
-  const [showBackupCodes, setShowBackupCodes] = useState(false);
   const [showSignOutModal, setShowSignOutModal] = useState(false);
 
   const strength = getStrength(newPw);

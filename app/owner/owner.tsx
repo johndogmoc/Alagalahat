@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -8,10 +9,9 @@ import { Button } from "@/components/ui/button";
 import { getSupabaseClient } from "@/lib/supabase";
 import {
   IconPaw, IconAlertTriangle, IconSyringe, IconCheck,
-  IconChevronRight, IconClipboard, IconSearch, IconBell, IconShield
+  IconChevronRight, IconClipboard, IconBell, IconShield
 } from "@/components/icons";
 import { PetCard } from "@/components/shared/PetCard";
-import { StatusBadge } from "@/components/shared/StatusBadge";
 
 interface PetRow {
   id: string;
@@ -70,7 +70,6 @@ export default function OwnerDashboardPage() {
   const [vaxDue, setVaxDue] = useState<VaxRow[]>([]);
   const [lostAlerts, setLostAlerts] = useState<LostPetRow[]>([]);
   const [stats, setStats] = useState({ pets: 0, vaxDue: 0, lostReports: 0, certified: false });
-  const [loading, setLoading] = useState(true);
 
   const todayTip = careTips[new Date().getDate() % careTips.length];
 
@@ -148,8 +147,6 @@ export default function OwnerDashboardPage() {
           certified: myPets.length > 0 && myPets.every((p) => p.status === "Approved")
         });
       }
-
-      setLoading(false);
     }
     load();
     return () => { mounted = false; };

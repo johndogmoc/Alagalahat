@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+
 import { AuthShell } from "@/components/AuthShell";
 import { LostPetAnnouncementBoard } from "@/components/lost-pets/LostPetAnnouncementBoard";
 

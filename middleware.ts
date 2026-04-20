@@ -44,12 +44,18 @@ export async function middleware(request: NextRequest) {
 
   // If env vars are not configured, deny access to protected routes instead of crashing.
   // This prevents runtime failures like "project URL and Key are required".
-  const hasSupabaseEnv =
-    Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) && Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+  
+  // Strip quotes if they somehow remained (can happen in some environments)
+  const cleanUrl = supabaseUrl.replace(/^["']|["']$/g, '');
+  const cleanKey = supabaseKey.replace(/^["']|["']$/g, '');
+
+  const hasSupabaseEnv = Boolean(cleanUrl) && Boolean(cleanKey);
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
+    cleanUrl,
+    cleanKey,
     {
       cookies: {
         getAll() {
@@ -73,9 +79,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const { data } = await supabase.auth.getUser();
-  const user = data.user ?? null;
-  const role = getRoleFromUser(user);
+  let user = null;
+  let role: Role | null = null;
+
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user ?? null;
+    role = getRoleFromUser(user);
+  } catch (err) {
+    console.error("Supabase auth error in middleware:", err);
+    // Continue with user = null
+  }
 
   // Redirect logged-in users away from auth pages and the landing page.
   const isAuthOnlyPage = pathname === "/login" || pathname === "/login/admin" || pathname === "/register" || pathname === "/";

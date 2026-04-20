@@ -63,6 +63,9 @@ export default function RegisterPetPage() {
   // Section 3: Confirmation
   const [confirmed, setConfirmed] = useState(false);
 
+  // Wizard State
+  const [step, setStep] = useState(1);
+
   // State
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -195,25 +198,45 @@ export default function RegisterPetPage() {
     if (fileRef.current) fileRef.current.value = "";
   }, []);
 
-  /* ---------- Progress tracker ---------- */
-  const completion = useMemo(() => {
-    const checks = [
-      !!petName.trim(),
-      !!species,
-      !!breed.trim(),
-      !!size,
-      !!region,
-      !!province,
-      !!city,
-      !!barangay,
-      !!sex,
-      confirmed
-    ];
-    const done = checks.filter(Boolean).length;
-    return { done, total: checks.length, pct: Math.round((done / checks.length) * 100) };
-  }, [petName, species, breed, size, region, province, city, barangay, sex, confirmed]);
+  function validateStep(currentStep: number): boolean {
+    const errs: Record<string, string> = {};
+    if (currentStep === 1) {
+      if (!petName.trim()) errs.petName = "Pet name is required";
+      if (!species) errs.species = "Select a species";
+      if (!breed.trim()) errs.breed = "Breed is required";
+      if (!size) errs.size = "Select a size";
+    } else if (currentStep === 2) {
+      if (!region) errs.region = "Select a region";
+      if (!province) errs.province = "Select a province";
+      if (!city) errs.city = "Select a city / municipality";
+      if (!barangay) errs.barangay = "Select a barangay";
+    } else if (currentStep === 3) {
+      if (!sex) errs.sex = "Select sex";
+    } else if (currentStep === 4) {
+      if (!confirmed) errs.confirmed = "You must confirm the information is accurate";
+    }
+    
+    setErrors(errs);
+    if (Object.keys(errs).length > 0) {
+      toast.error("Please complete all required fields for this step.");
+      return false;
+    }
+    return true;
+  }
 
-  function validate(): boolean {
+  const nextStep = () => {
+    if (validateStep(step)) {
+      setStep((s) => Math.min(s + 1, 4));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const prevStep = () => {
+    setStep((s) => Math.max(s - 1, 1));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  function validateAll(): boolean {
     const errs: Record<string, string> = {};
     if (!petName.trim()) errs.petName = "Pet name is required";
     if (!species) errs.species = "Select a species";
@@ -233,7 +256,7 @@ export default function RegisterPetPage() {
   }
 
   async function handleSubmit() {
-    if (!validate()) return;
+    if (!validateAll()) return;
 
     setIsLoading(true);
     try {
@@ -327,6 +350,7 @@ export default function RegisterPetPage() {
               setSize(""); setDob(""); setSex(""); setSpayedNeutered(null);
               setMicrochip(""); setPhotoFile(null); setPhotoPreview(null);
               setConfirmed(false); setSuccess(false); setRegNumber("");
+              setStep(1);
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}>
               Register Another Pet
@@ -356,21 +380,48 @@ export default function RegisterPetPage() {
             Fill in your pet&apos;s information to receive an official barangay registration.
           </p>
 
-          {/* Progress bar */}
-          <div className="reg-progress" aria-label={`Form progress: ${completion.pct}%`}>
-            <div className="reg-progress-row">
-              <span className="reg-progress-label">
-                Progress — {completion.done} of {completion.total} fields completed
-              </span>
-              <span className="reg-progress-pct">{completion.pct}%</span>
-            </div>
-            <div className="reg-progress-track" role="progressbar" aria-valuenow={completion.pct} aria-valuemin={0} aria-valuemax={100}>
-              <div className="reg-progress-fill" style={{ width: `${completion.pct}%` }} />
-            </div>
+          {/* Step Wizard Indicator */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", margin: "32px 0 16px", position: "relative" }}>
+            <div style={{ position: "absolute", top: "14px", left: "12%", right: "12%", height: "2px", background: "var(--color-border)", zIndex: 0 }} />
+            <div style={{ position: "absolute", top: "14px", left: "12%", height: "2px", background: "var(--color-primary)", zIndex: 0, transition: "width 0.3s ease", width: `${((step - 1) / 3) * 76}%` }} />
+            
+            {[
+              { id: 1, label: "Basic Info" },
+              { id: 2, label: "Location" },
+              { id: 3, label: "Identity" },
+              { id: 4, label: "Confirmation" }
+            ].map((s) => {
+              const isActive = step === s.id;
+              const isCompleted = step > s.id;
+              return (
+                <div key={s.id} style={{ display: "flex", flexDirection: "column", alignItems: "center", zIndex: 1, flex: 1 }}>
+                  <div style={{
+                    width: 30, height: 30, borderRadius: "50%",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    background: isActive || isCompleted ? "var(--color-primary)" : "var(--color-background)",
+                    border: `2px solid ${isActive || isCompleted ? "var(--color-primary)" : "var(--color-border)"}`,
+                    color: isActive || isCompleted ? "#fff" : "var(--color-text-muted)",
+                    fontWeight: 700, fontSize: 14,
+                    transition: "all 0.3s ease"
+                  }}>
+                    {isCompleted ? <IconCheck size={16} /> : s.id}
+                  </div>
+                  <span style={{
+                    marginTop: 8, fontSize: 12, fontWeight: isActive ? 700 : 500,
+                    color: isActive ? "var(--color-text)" : "var(--color-text-muted)",
+                    textAlign: "center",
+                    transition: "color 0.3s ease"
+                  }}>
+                    {s.label}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
 
         {/* ====== SECTION 1: Basic Info ====== */}
+        {step === 1 && (
         <section className="reg-section">
           <h2 className="reg-section-title">
             <span className="reg-section-badge">1</span>
@@ -444,8 +495,10 @@ export default function RegisterPetPage() {
             {errors.size && <p style={errStyle} role="alert">{errors.size}</p>}
           </div>
         </section>
+        )}
 
         {/* ====== SECTION 2: Location ====== */}
+        {step === 2 && (
         <section className="reg-section">
           <h2 className="reg-section-title">
             <span className="reg-section-badge">2</span>
@@ -517,8 +570,10 @@ export default function RegisterPetPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* ====== SECTION 3: Identity ====== */}
+        {step === 3 && (
         <section className="reg-section">
           <h2 className="reg-section-title">
             <span className="reg-section-badge">3</span>
@@ -645,8 +700,10 @@ export default function RegisterPetPage() {
             {errors.photo && <p style={errStyle} role="alert">{errors.photo}</p>}
           </div>
         </section>
+        )}
 
         {/* ====== SECTION 4: Owner Confirmation ====== */}
+        {step === 4 && (
         <section className="reg-section">
           <h2 className="reg-section-title">
             <span className="reg-section-badge">4</span>
@@ -691,35 +748,49 @@ export default function RegisterPetPage() {
           </label>
           {errors.confirmed && <p style={errStyle} role="alert">{errors.confirmed}</p>}
         </section>
+        )}
 
         {/* Sticky submit bar */}
         <div className="reg-submit-bar">
           <div className="reg-submit-bar-inner">
             <div className="reg-submit-meta">
               <p className="reg-submit-title">
-                {completion.pct === 100 ? "All set! Ready to submit." : `${completion.done}/${completion.total} fields completed`}
+                {step === 4 ? "All set! Ready to submit." : `Step ${step} of 4`}
               </p>
               <p className="reg-submit-sub">
-                Your pet will be reviewed by your barangay staff before being approved.
+                {step === 4 ? "Your pet will be reviewed by your barangay staff before being approved." : "Please complete the required fields to continue."}
               </p>
             </div>
             <div className="reg-submit-actions">
-              <Button variant="outline" onClick={() => router.push("/home")} disabled={isLoading}>
-                Cancel
-              </Button>
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={handleSubmit}
-                disabled={isLoading}
-                type="button"
-              >
-                {isLoading ? (
-                  <><IconSpinner size={20} /> Submitting…</>
-                ) : (
-                  <><IconCheck size={18} /> Submit Registration</>
-                )}
-              </Button>
+              {step > 1 ? (
+                <Button variant="outline" onClick={prevStep} disabled={isLoading}>
+                  Back
+                </Button>
+              ) : (
+                <Button variant="outline" onClick={() => router.push("/home")} disabled={isLoading}>
+                  Cancel
+                </Button>
+              )}
+              
+              {step < 4 ? (
+                <Button variant="primary" onClick={nextStep} disabled={isLoading}>
+                  Next Step
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  size="lg"
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                  type="button"
+                >
+                  {isLoading ? (
+                    <><IconSpinner size={20} /> Submitting…</>
+                  ) : (
+                    <><IconCheck size={18} /> Submit Registration</>
+                  )}
+                </Button>
+              )}
             </div>
           </div>
         </div>

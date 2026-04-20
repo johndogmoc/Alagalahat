@@ -93,6 +93,7 @@ export default function CareGuidePage() {
           ].map((tab) => (
             <button
               key={tab.id}
+              role="tab"
               onClick={() => setActiveTab(tab.id)}
               aria-selected={activeTab === tab.id}
               className="tab-button"

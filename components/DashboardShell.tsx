@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { Sidebar, type SidebarRole } from "@/components/Sidebar";
 import { Footer } from "@/components/Footer";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
-import { Navbar } from "@/components/Navbar";
 
 // Social UI Components for Owner
 import { HomeNavbar } from "@/app/home/components/HomeNavbar";
@@ -20,10 +19,6 @@ interface DashboardShellProps {
 
 export function DashboardShell({ role, userName, children }: DashboardShellProps) {
   if (role === "Owner") {
-    // Generate initials for the new UI's avatar
-    const initials = userName
-      ? userName.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()
-      : "JC";
 
     return (
       <div className="home-page" style={{ paddingBottom: "80px" }}> {/* pb for mobile nav */}

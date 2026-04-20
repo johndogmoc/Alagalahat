@@ -1,9 +1,10 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import { useState, useEffect } from "react";
 import { DashboardShell } from "@/components/DashboardShell";
 import { Button } from "@/components/ui/button";
-import { IconDownload, IconPrinter, IconQrCode, IconCheck } from "@/components/icons";
+import { IconDownload, IconPrinter, IconCheck } from "@/components/icons";
 import { getSupabaseClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
@@ -99,14 +100,16 @@ export default function CertificatesPage() {
     }
   }, [selectedPetId]);
 
+  const selectedPet = pets.find(p => p.id === selectedPetId);
+
   // Generate QR code when pet changes
   useEffect(() => {
-    if (selectedPetId) {
+    if (selectedPetId && selectedPet?.registration_number) {
       const generateQR = async () => {
         try {
           const QRCode = await import("qrcode");
           const url = await QRCode.toDataURL(
-            `https://barangay.local/pet/${selectedPet?.registration_number}`,
+            `https://barangay.local/pet/${selectedPet.registration_number}`,
             { width: 200, margin: 2 }
           );
           setQrCodeUrl(url);
@@ -116,9 +119,8 @@ export default function CertificatesPage() {
       };
       generateQR();
     }
-  }, [selectedPetId]);
+  }, [selectedPetId, selectedPet?.registration_number]);
 
-  const selectedPet = pets.find(p => p.id === selectedPetId);
   const getSpeciesEmoji = (species: string) => {
     switch (species?.toLowerCase()) {
       case "dog": return "🐕";

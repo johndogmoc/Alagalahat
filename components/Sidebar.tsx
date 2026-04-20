@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import {
   IconHome, IconPaw, IconAlertTriangle, IconClipboard,
   IconUser, IconSettings, IconHelpCircle, IconChevronRight,
-  IconMenu, IconX, IconBarangaySeal, IconLogOut
+  IconMenu, IconX, IconLogOut
 } from "@/components/icons";
 import { getSupabaseClient } from "@/lib/supabase";
 

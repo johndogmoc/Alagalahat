@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { getSupabaseClient } from "@/lib/supabase";
-import { IconPaw, IconCheck, IconX, IconAlertTriangle } from "@/components/icons";
+import { IconPaw, IconCheck, IconX } from "@/components/icons";
 
 interface Pet {
   id: string;
@@ -24,6 +24,7 @@ export default function AdminPetsPage() {
 
   useEffect(() => {
     fetchPets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
   async function fetchPets() {

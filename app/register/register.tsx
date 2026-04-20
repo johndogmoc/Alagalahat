@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -72,7 +73,6 @@ export default function RegisterPage() {
   const [address, setAddress] = useState("");
   const [barangay, setBarangay] = useState("");
   const [role, setRole] = useState<"Owner" | "Staff" | "">("");
-  const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
 
@@ -143,7 +143,10 @@ export default function RegisterPage() {
 
   /* --- Photo handler --- */
   const handlePhoto = useCallback((file: File | null) => {
-    if (!file) return;
+    if (!file) {
+      setPhotoPreview(null);
+      return;
+    }
     if (file.size > 2 * 1024 * 1024) {
       setErrors((prev) => ({ ...prev, photo: "File must be under 2MB" }));
       return;
@@ -152,8 +155,7 @@ export default function RegisterPage() {
       setErrors((prev) => ({ ...prev, photo: "File must be an image" }));
       return;
     }
-    setErrors((prev) => { const n = { ...prev }; delete n.photo; return n; });
-    setPhotoFile(file);
+    setErrors((p) => { const n = { ...p }; delete n.photo; return n; });
     const reader = new FileReader();
     reader.onload = (e) => setPhotoPreview(e.target?.result as string);
     reader.readAsDataURL(file);
@@ -885,7 +887,6 @@ function StepPersonalDetails(p: Step2Props) {
                 key={opt.value}
                 type="button"
                 onClick={() => { p.setRole(opt.value); clearErr("role"); }}
-                aria-pressed={selected}
                 role="radio"
                 aria-checked={selected}
                 style={{

@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/sonner";
 import { getSupabaseClient } from "@/lib/supabase";
-import { IconSettings, IconCheck, IconShield, IconPaw, IconSyringe, IconBell } from "@/components/icons";
+import { IconSettings, IconCheck, IconShield, IconPaw, IconBell } from "@/components/icons";
 import { ThemeToggle } from "@/components/AccessibilityControls";
 import { ToggleSwitch } from "@/app/owner/settings/components/shared";
 import { useAccessibility } from "@/components/AccessibilityProvider";

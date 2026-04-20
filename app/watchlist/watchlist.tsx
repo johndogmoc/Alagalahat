@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
@@ -6,7 +7,7 @@ import Link from "next/link";
 import { AuthShell } from "@/components/AuthShell";
 import { Button } from "@/components/ui/button";
 import { getSupabaseClient } from "@/lib/supabase";
-import { IconPaw, IconAlertTriangle, IconCheck, IconSearch, IconBell, IconChevronRight, IconX } from "@/components/icons";
+import { IconPaw, IconBell, IconX } from "@/components/icons";
 
 interface WatchCriteria {
   species: string[];
