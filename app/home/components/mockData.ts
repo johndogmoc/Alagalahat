@@ -83,10 +83,10 @@ export const myPets: PetData[] = [];
 export const feedPosts: Post[] = [];
 
 /* --- Lost Pet Alerts (Right Sidebar) --- */
-export const activeLostAlerts: any[] = [];
+export const activeLostAlerts: { id: string; pet_name: string; last_known_location: string; status: string; created_at: string }[] = [];
 
 /* --- Suggested People --- */
-export const suggestedPeople: any[] = [];
+export const suggestedPeople: { id: string; full_name: string; avatar_url: string | null }[] = [];
 
 /* --- Community Highlights --- */
 export const communityHighlights = {

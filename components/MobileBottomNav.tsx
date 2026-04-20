@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { getSupabaseClient } from "@/lib/supabase";
 
-import { IconHome, IconPaw, IconAlertTriangle, IconUser, IconClipboard, IconSearch, IconMenu, IconLogOut } from "@/components/icons";
+import { IconHome, IconPaw, IconAlertTriangle, IconUser, IconClipboard, IconMenu, IconLogOut } from "@/components/icons";
 import type { SidebarRole } from "@/components/Sidebar";
 
 const ownerItems = [
@@ -18,14 +18,12 @@ const ownerItems = [
 const staffItems = [
   { href: "/staff", label: "Home", icon: IconHome },
   { href: "/staff/pets", label: "Queue", icon: IconClipboard },
-  { href: "/search", label: "Search", icon: IconSearch },
   { href: "/lost-pets", label: "Lost", icon: IconAlertTriangle }
 ] as const;
 
 const adminItems = [
   { href: "/admin", label: "Home", icon: IconHome },
   { href: "/staff/pets", label: "Queue", icon: IconClipboard },
-  { href: "/search", label: "Search", icon: IconSearch },
   { href: "/profile", label: "Profile", icon: IconUser }
 ] as const;
 
@@ -180,13 +178,13 @@ export function MobileBottomNav({ role, userName = "User" }: { role: SidebarRole
           </div>
         ) : (
           <>
-            <Link href="/profile" onClick={() => setIsDropupOpen(false)} style={{
+            <Link href="/profile" prefetch={false} onClick={() => setIsDropupOpen(false)} style={{
               padding: "var(--space-3) var(--space-5)", textDecoration: "none", color: "var(--color-text)", fontSize: "var(--font-size-sm)", fontWeight: 600,
               display: "flex", alignItems: "center", transition: "background var(--transition-fast)"
             }}>
               Dashboard / My Profile
             </Link>
-            <Link href="/owner/settings" onClick={() => setIsDropupOpen(false)} style={{
+            <Link href="/owner/settings" prefetch={false} onClick={() => setIsDropupOpen(false)} style={{
               padding: "var(--space-3) var(--space-5)", textDecoration: "none", color: "var(--color-text)", fontSize: "var(--font-size-sm)", fontWeight: 600,
               display: "flex", alignItems: "center", transition: "background var(--transition-fast)"
             }}>
@@ -243,7 +241,7 @@ export function MobileBottomNav({ role, userName = "User" }: { role: SidebarRole
 
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
           return (
-            <Link key={item.href} href={item.href} aria-current={isActive ? "page" : undefined}>
+            <Link key={item.href} href={item.href} prefetch={false} aria-current={isActive ? "page" : undefined}>
               <Icon size={20} />
               <span>{item.label}</span>
             </Link>

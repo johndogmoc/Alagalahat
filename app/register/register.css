@@ -1,134 +1,104 @@
 /* ============================================
-   Register Pages — Mobile-first Responsive
+   Register Pages — Strict Polished Design
    ============================================ */
 
-/* Two-column grid that stacks on mobile */
+.reg-page-title {
+  font-size: 32px;
+  letter-spacing: -0.03em;
+  color: var(--color-primary);
+}
+
+.reg-section {
+  padding: 32px;
+  background: var(--color-card);
+  border-radius: 16px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+  margin-bottom: 24px;
+}
+
+.reg-section-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
 .reg-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.reg-loc-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
-/* Location selects grid (used in both register pages) */
-.reg-loc-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+/* Labels and Inputs */
+.reg-section label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-/* Section padding */
-.reg-section {
-  padding: 24px;
+.reg-section input, .reg-section select, .reg-section textarea {
+  border-radius: 10px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-background);
+  transition: all 0.2s ease;
+  font-size: 15px;
+  color: var(--color-text);
 }
 
-/* Page card */
-.reg-card {
-  padding: 32px;
+.reg-section input:focus, .reg-section select:focus, .reg-section textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(27, 79, 138, 0.1);
+  outline: none;
 }
 
-/* Header title */
-.reg-page-title {
-  font-size: 28px;
+/* Species & Size Radio Cards */
+.reg-species-grid button {
+  border-width: 2px;
+}
+.reg-species-grid button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-/* Section title */
-.reg-section-title {
-  font-size: var(--font-size-lg);
-  word-break: break-word;
-  overflow-wrap: break-word;
+/* Photo dropzone */
+.reg-photo-drop {
+  border: 2px dashed var(--color-border);
+  border-radius: 16px;
+  transition: all 0.2s ease;
+  background: var(--color-background);
+}
+.reg-photo-drop:hover {
+  border-color: var(--color-primary);
+  background: rgba(27, 79, 138, 0.02);
 }
 
-/* Responsive breakpoints */
 @media (max-width: 600px) {
-  .reg-grid-2col {
+  .reg-grid-2col, .reg-loc-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 16px;
   }
-
-  .reg-loc-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
   .reg-section {
-    padding: 16px;
+    padding: 20px;
   }
-
-  .reg-card {
-    padding: 20px 16px;
-  }
-
   .reg-page-title {
-    font-size: 22px;
-  }
-
-  .reg-section-title {
-    font-size: var(--font-size-base);
-  }
-
-  /* Species radio cards — 3cols can be tight, shrink padding */
-  .reg-species-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 8px !important;
-  }
-
-  .reg-species-grid button {
-    padding: 10px 6px !important;
-    font-size: var(--font-size-xs) !important;
-  }
-
-  /* Photo upload area — less padding on mobile */
-  .reg-photo-drop {
-    padding: 16px !important;
-    min-height: 100px !important;
-  }
-
-  /* Progress step labels hidden on small screens (already handled above) */
-  .step-label {
-    display: none;
-  }
-
-  /* Fix select overflow */
-  .reg-section select {
-    font-size: var(--font-size-sm);
-    min-width: 0;
-    text-overflow: ellipsis;
-  }
-
-  /* Fix input overflow */
-  .reg-section input,
-  .reg-section textarea {
-    font-size: var(--font-size-sm);
-    min-width: 0;
-  }
-
-  /* Fix radio groups (sex, spayed/neutered) from overflowing */
-  .reg-section [role="radiogroup"] {
-    flex-wrap: wrap;
-  }
-
-  .reg-section [role="radiogroup"] button {
-    min-width: 0;
-    padding: 8px 10px !important;
-    font-size: var(--font-size-xs) !important;
+    font-size: 26px;
   }
 }
 
-@media (max-width: 400px) {
-  .reg-card {
-    padding: 16px 12px;
-  }
 
-  .reg-section {
-    padding: 14px;
-  }
 
-  .reg-page-title {
-    font-size: 20px;
-  }
 
-  .reg-species-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 6px !important;
-  }
-}
+

@@ -236,7 +236,7 @@ export function PostCard({ post, onPostUpdate }: PostCardProps) {
               toast.success("Thank you for reporting! We've notified the pet owner.");
             }}
           >
-            I've Seen This Pet
+            I&apos;ve Seen This Pet
           </button>
           <button 
             type="button" 
@@ -400,7 +400,7 @@ export function PostCard({ post, onPostUpdate }: PostCardProps) {
               Report This Post
             </h3>
             <p style={{ margin: "0 0 20px", fontSize: 14, color: "var(--color-text-muted)" }}>
-              Help us keep the community safe. Tell us why you're reporting this post.
+              Help us keep the community safe. Tell us why you&apos;re reporting this post.
             </p>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>

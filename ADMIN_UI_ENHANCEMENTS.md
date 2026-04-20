@@ -6,6 +6,82 @@
 
 ---
 
+## 🔧 MAINTENANCE UPDATE: ABORTED REQUEST HARDENING
+
+### Issue Observed
+- Admin and Super Admin dashboards triggered multiple concurrent Supabase count requests on mount.
+- During route changes, hot reloads, or interrupted page transitions, some requests were canceled by the browser and surfaced as noisy `ERR_ABORTED` console errors.
+- Shared navigation also still allowed prefetch traffic for sidebar/mobile links, which increased aborted `_rsc` requests during quick navigation.
+
+### Root Cause
+- Dashboard `load()` flows did not wrap async fetches in abort-aware `try/catch` handling.
+- In-flight requests were not tied to an `AbortController` during component cleanup.
+- Navigation links relied on default prefetch behavior in areas where rapid page switching is common.
+
+### Fix Applied
+- Added abort-aware error handling to:
+  - `/admin`
+  - `/super-admin`
+- Attached `AbortController` cleanup to the dashboard data requests so canceled requests are handled intentionally.
+- Suppressed expected abort errors while preserving real console errors for actual failures.
+- Disabled prefetch on shared sidebar/mobile navigation links to reduce canceled route prefetch noise.
+- Removed the stale `Search` mobile nav item so desktop and mobile admin/staff navigation stay consistent.
+
+### Verification
+- `npm run build` passes successfully, including Next.js lint/type validation during production build.
+- Edited files report clean diagnostics in the IDE.
+- Local dev server starts successfully and serves the updated routes without new runtime errors during preview.
+
+---
+
+## 🔧 MAINTENANCE UPDATE: PET QUEUE LAYOUT RECONSTRUCTION
+
+### Issue Observed
+- The `Pet Queue` interface had sections and text visually pushing against or beyond the highlighted card boundaries.
+- Title rows, filter controls, and empty states could look misaligned because layout spacing depended on mixed inline styles plus inherited card component padding.
+- Narrower widths increased the chance of overflow because content blocks relied on fixed column assumptions instead of explicit responsive constraints.
+
+### Root Cause
+- The page mixed custom inline spacing with shared `CardHeader` and `CardContent` padding rules, creating inconsistent internal offsets.
+- Several containers did not explicitly declare `min-width: 0`, overflow handling, or viewport-specific grid behavior.
+- The queue body had no dedicated scroll region, so long content stacks relied entirely on page height and natural wrapping.
+
+### Layout Architecture
+- Rebuilt `/staff/pets` as three constrained card sections:
+  - Hero / summary shell
+  - Filter shell
+  - Scrollable queue list shell
+- Replaced the older ad-hoc card header composition with explicit section wrappers and local layout classes.
+- Added a responsive grid system for:
+  - Summary cards: `4 -> 2 -> 1` columns
+  - Filters: `2 -> 1` columns
+  - Queue items: `content/actions` two-column desktop layout that collapses to one column on tablet/mobile
+
+### Spacing System
+- Uses a 4px baseline grid with component spacing in multiples of 4.
+- Minimum internal spacing is `8px`.
+- Primary spacing tokens used in the page:
+  - `8px` badge/action gaps
+  - `12px` compact control padding
+  - `16px` content padding and grouped spacing
+  - `20px` card interior blocks
+  - `24px` section shell padding on desktop
+- Typography now uses `clamp()` for stable hierarchy across desktop, tablet, and mobile widths.
+
+### Overflow Safety
+- Applied `box-sizing: border-box` across the page shell and descendants.
+- Added `min-width: 0` to grid/flex children that contain text.
+- Added `overflow: hidden` to all major cards and queue items.
+- Added a bounded vertical scroll region for queue content on larger screens and natural flow on smaller screens.
+- Disabled horizontal overflow in the queue list region.
+
+### Breakpoints
+- Desktop: optimized for wide layouts such as `1920x1080`
+- Tablet: grid collapse and action stacking at `<= 820px`
+- Mobile: single-column summary cards and reduced shell padding at `<= 560px`, covering narrow views such as `375px`
+
+---
+
 ## 🎨 COMPREHENSIVE UI MODERNIZATION
 
 All admin pages have been systematically enhanced with a **premium, professional design system** featuring modern aesthetics, smooth interactions, and strict visual hierarchy.

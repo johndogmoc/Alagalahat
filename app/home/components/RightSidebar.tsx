@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getSupabaseClient } from "@/lib/supabase";
-import { useSession } from "@/components/SessionProvider";
-import { IconChevronRight, IconBell, IconUser, IconPaw, IconMessageCircle, IconBarangaySeal, IconAlertTriangle } from "@/components/icons";
+import { IconChevronRight, IconBell, IconUser, IconPaw, IconAlertTriangle } from "@/components/icons";
 
 interface LostAlert {
   id: string;
@@ -14,13 +13,25 @@ interface LostAlert {
   created_at: string;
 }
 
+interface UserProfile {
+  id: string;
+  full_name: string;
+  avatar_url: string | null;
+}
+
+interface HighlightPost {
+  id: string;
+  content: string;
+  likes: number;
+  author_name: string;
+}
+
 export function RightSidebar() {
-  const { initials } = useSession();
   const [following, setFollowing] = useState<Set<string>>(new Set());
   
   const [alerts, setAlerts] = useState<LostAlert[]>([]);
-  const [users, setUsers] = useState<any[]>([]);
-  const [highlights, setHighlights] = useState<any[]>([]);
+  const [users, setUsers] = useState<UserProfile[]>([]);
+  const [highlights, setHighlights] = useState<HighlightPost[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -159,7 +170,7 @@ export function RightSidebar() {
                      Popluar by <span style={{ color: "var(--color-primary)" }}>{post.author_name}</span>
                   </p>
                   <p style={{ margin: "0 0 8px", fontSize: 13, fontWeight: 500, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                     "{post.content}"
+                     &quot;{post.content}&quot;
                   </p>
                   <div style={{ display: "flex", alignItems: "center", gap: 4, color: "#E9C46A", fontSize: 12, fontWeight: 700 }}>
                      <IconPaw size={14} /> {post.likes} Likes

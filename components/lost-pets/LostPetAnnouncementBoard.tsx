@@ -18,6 +18,7 @@ type BoardStatusFilter = "All" | "Pending" | "Active" | "Resolved";
 type SpeciesFilter = "All" | "Dog" | "Cat" | "Other";
 
 /* ── Row mappers ── */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapRowToLostReport(row: any): LostPetReport {
   const pet: LostPetRegistrationSnapshot = {
     petPhotoUrl: row.pet_photo_url || null,
@@ -48,6 +49,7 @@ function mapRowToLostReport(row: any): LostPetReport {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapRowToFoundReport(row: any): FoundPetReport {
   return {
     id: row.id,

@@ -1,5 +1,2 @@
-export default function DashboardPage() {
-  // Middleware redirects this route based on role.
-  return null;
-}
-
+export { default } from './dashboard';
+export * from './dashboard';

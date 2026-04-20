@@ -1,0 +1,170 @@
+[
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\admin\\logs\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\admin\\logs\\logs.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\admin\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\admin\\admin.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\admin\\pets\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\admin\\pets\\pets.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\admin\\reports\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\admin\\reports\\reports.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\admin\\settings\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\admin\\settings\\settings.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\admin\\users\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\admin\\users\\users.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\care-guide\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\care-guide\\care-guide.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\care-guide\\[slug]\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\care-guide\\[slug]\\slug.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\certificates\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\certificates\\certificates.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\dashboard\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\dashboard\\dashboard.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\forgot-password\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\forgot-password\\forgot-password.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\help\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\help\\help.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\home\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\home\\home.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\login\\admin\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\login\\admin\\admin.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\login\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\login\\login.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\lost-pets\\admin\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\lost-pets\\admin\\admin.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\lost-pets\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\lost-pets\\lost-pets.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\lost-pets\\report\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\lost-pets\\report\\report.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\maintenance\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\maintenance\\maintenance.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\messages\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\messages\\messages.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\notifications\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\notifications\\notifications.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\owner\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\owner\\owner.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\owner\\register-pet\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\owner\\register-pet\\register-pet.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\owner\\settings\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\owner\\settings\\settings.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\root.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\pet\\[qrId]\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\pet\\[qrId]\\qrId.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\pets\\new\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\pets\\new\\new.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\pets\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\pets\\pets.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\pets\\[id]\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\pets\\[id]\\id.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\pets\\[id]\\vaccinations\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\pets\\[id]\\vaccinations\\vaccinations.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\profile\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\profile\\profile.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\recommendations\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\recommendations\\recommendations.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\register\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\register\\register.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\search\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\search\\search.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\staff\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\staff\\staff.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\staff\\pets\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\staff\\pets\\pets.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\staff\\profile\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\staff\\profile\\profile.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\staff\\vaccinations\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\staff\\vaccinations\\vaccinations.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\super-admin\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\super-admin\\super-admin.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\update-password\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\update-password\\update-password.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\vaccines\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\vaccines\\vaccines.tsx"
+  },
+  {
+    "original": "C:\\xampp\\htdocs\\AlagaLahat\\app\\watchlist\\page.tsx",
+    "renamedTo": "C:\\xampp\\htdocs\\AlagaLahat\\app\\watchlist\\watchlist.tsx"
+  }
+]

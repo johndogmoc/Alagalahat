@@ -176,6 +176,7 @@ export function LostPetReportForm() {
 
         if (!mounted) return;
         if (!error && rows) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const mapped = (rows as any[]).map(r => ({
              ...r,
              profiles: Array.isArray(r.profiles) ? r.profiles[0] : r.profiles
@@ -232,6 +233,7 @@ export function LostPetReportForm() {
     if (error) { toast.error(error.message); return; }
     setSelectedStaffPetId("");
     if (rows) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mapped = (rows as any[]).map(r => ({
          ...r,
          profiles: Array.isArray(r.profiles) ? r.profiles[0] : r.profiles

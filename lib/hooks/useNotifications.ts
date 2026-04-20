@@ -44,7 +44,9 @@ export function useNotifications() {
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "notifications" },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (payload: any) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           supabase.auth.getUser().then(({ data }: any) => {
             const userId = data.user?.id;
             if (userId && payload.new.user_id === userId) {

@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import {
   IconHome, IconPaw, IconAlertTriangle, IconClipboard,
   IconUser, IconSettings, IconHelpCircle, IconChevronRight,
-  IconMenu, IconX, IconBarangaySeal, IconSearch, IconLogOut
+  IconMenu, IconX, IconBarangaySeal, IconLogOut
 } from "@/components/icons";
 import { getSupabaseClient } from "@/lib/supabase";
 
@@ -18,17 +18,17 @@ interface SidebarItem {
   label: string;
   icon: typeof IconHome;
   roles: SidebarRole[];
+  exact?: boolean;
 }
 
 const sidebarItems: SidebarItem[] = [
-  { href: "/owner", label: "Dashboard", icon: IconHome, roles: ["Owner"] },
-  { href: "/staff", label: "Dashboard", icon: IconHome, roles: ["Staff"] },
-  { href: "/admin", label: "Dashboard", icon: IconHome, roles: ["Admin"] },
+  { href: "/owner", label: "Dashboard", icon: IconHome, roles: ["Owner"], exact: true },
+  { href: "/staff", label: "Dashboard", icon: IconHome, roles: ["Staff"], exact: true },
+  { href: "/admin", label: "Dashboard", icon: IconHome, roles: ["Admin"], exact: true },
   { href: "/pets", label: "My Pets", icon: IconPaw, roles: ["Owner"] },
   { href: "/owner/register-pet", label: "Register Pet", icon: IconClipboard, roles: ["Owner"] },
   { href: "/lost-pets", label: "Lost Pets", icon: IconAlertTriangle, roles: ["Owner", "Staff", "Admin"] },
   { href: "/staff/pets", label: "Pet Queue", icon: IconClipboard, roles: ["Staff", "Admin"] },
-  { href: "/search", label: "Search", icon: IconSearch, roles: ["Staff", "Admin"] },
   { href: "/admin/users", label: "User Management", icon: IconUser, roles: ["Admin"] },
   { href: "/admin/logs", label: "Reports & Logs", icon: IconClipboard, roles: ["Admin"] },
   { href: "/admin/settings", label: "System Settings", icon: IconSettings, roles: ["Admin"] },
@@ -113,11 +113,14 @@ export function Sidebar({ role, userName }: SidebarProps) {
       <nav aria-label="Sidebar navigation" style={{ flex: 1, padding: "0 8px", display: "flex", flexDirection: "column", gap: 2 }}>
         {items.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/"));
+          const isActive = item.exact
+            ? pathname === item.href
+            : pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/"));
           return (
             <Link
               key={item.href}
               href={item.href}
+              prefetch={false}
               title={collapsed ? item.label : undefined}
               aria-current={isActive ? "page" : undefined}
               style={{
@@ -148,6 +151,7 @@ export function Sidebar({ role, userName }: SidebarProps) {
       <div style={{ borderTop: "1px solid var(--color-border)", padding: "12px 8px", display: "flex", flexDirection: "column", gap: 2 }}>
         <Link
           href="/help"
+          prefetch={false}
           style={{
             display: "flex", alignItems: "center", gap: 12,
             padding: collapsed ? "10px" : "10px 14px",

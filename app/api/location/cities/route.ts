@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   try {
     const res = await fetch(`${BASE_URL}/${encodeURIComponent(region)}/${encodeURIComponent(province)}/municipalities_and_cities`);
     if (!res.ok) throw new Error(`API error: ${res.status}`);
-    let data = await res.json();
+    const data = await res.json();
 
     // CUSTOM OVERRIDE: Inject "City of Butuan" into Agusan del Norte
     if (province === "Agusan del Norte" && Array.isArray(data)) {

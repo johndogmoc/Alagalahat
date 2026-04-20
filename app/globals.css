@@ -284,6 +284,46 @@ a:hover {
   color: var(--color-primary);
 }
 
+/* --- Interactive Cards --- */
+.pet-card-hover {
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.pet-card-hover:hover,
+.pet-card-hover:focus-within {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md) !important;
+  border-color: rgba(0, 82, 204, 0.22) !important;
+}
+
+.pet-card-hover:hover img,
+.pet-card-hover:focus-within img {
+  transform: scale(1.02);
+}
+
+.lost-report-row {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  text-align: left;
+  font: inherit;
+  transition: background var(--transition-fast);
+}
+
+.lost-report-row:hover,
+.lost-report-row:focus-visible {
+  background: var(--color-background);
+}
+
 /* --- Headings --- */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
