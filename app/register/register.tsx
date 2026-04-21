@@ -239,7 +239,7 @@ export default function RegisterPage() {
      ============================================ */
   if (success) {
     return (
-      <div style={S.page}>
+      <div style={S.page} data-theme="dark">
         <div style={S.successContainer}>
           {/* Animated checkmark */}
           <div style={S.successCircle}>
@@ -285,7 +285,7 @@ export default function RegisterPage() {
      MAIN FORM
      ============================================ */
   return (
-    <div style={S.page}>
+    <div style={S.page} data-theme="dark">
       {/* Screen-reader live region */}
       <div ref={liveRef} aria-live="polite" className="sr-only" />
 
@@ -300,7 +300,7 @@ export default function RegisterPage() {
               AlagaLahat
             </span>
           </div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, color: "var(--color-text)", marginTop: 16, marginBottom: 4 }}>
+          <h1 style={{ fontSize: 24, fontWeight: 700, color: "var(--color-text)", marginTop: 16, marginBottom: 4, letterSpacing: "-0.03em" }}>
             Create your account
           </h1>
           <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-muted)", margin: 0 }}>
@@ -1073,6 +1073,7 @@ const S: Record<string, React.CSSProperties> = {
   card: {
     width: "100%",
     maxWidth: 560,
+    padding: 32,
     background: "var(--color-card)",
     borderRadius: "var(--radius-xl)",
     border: "1px solid var(--color-border)",
@@ -1116,7 +1117,7 @@ const S: Record<string, React.CSSProperties> = {
   },
   label: {
     fontSize: "var(--font-size-sm)",
-    fontWeight: 600,
+    fontWeight: 700,
     color: "var(--color-text)"
   },
   errMsg: {
