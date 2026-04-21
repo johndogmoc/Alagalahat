@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { LostPetAnnouncementCard } from "@/components/lost-pets/LostPetAnnouncementCard";
 import { FoundPetAnnouncementCard, type FoundPetReport } from "@/components/lost-pets/FoundPetAnnouncementCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { AppRole } from "@/lib/permissions";
 import { getSupabaseClient } from "@/lib/supabase";
 import type { LostPetReport, LostPetRegistrationSnapshot } from "@/lib/types/lostPet";
 import { getWatchlistReportIds, toggleWatchlistReportId } from "@/lib/watchlist";
@@ -33,7 +34,10 @@ function mapRowToLostReport(row: any): LostPetReport {
     ownerContactNumber: row.owner_contact_number || row.contact_info || null
   };
   return {
-    id: row.id, pet,
+    id: row.id,
+    petId: row.pet_id || null,
+    reporterId: row.reporter_id || null,
+    pet,
     lastKnownLocation: row.last_known_location || "Unknown location",
     missingAt: row.missing_at || row.created_at,
     notes: row.notes || null,
@@ -99,6 +103,10 @@ export function LostPetAnnouncementBoard() {
   const [isLoading, setIsLoading] = useState(true);
   const [lostReports, setLostReports] = useState<LostPetReport[]>([]);
   const [foundReports, setFoundReports] = useState<FoundPetReport[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [currentUserRole, setCurrentUserRole] = useState<AppRole | null>(null);
+  const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
+  const [currentUserPhone, setCurrentUserPhone] = useState<string | null>(null);
 
   const [typeFilter, setTypeFilter] = useState<ReportTypeFilter>("All");
   const [statusFilter, setStatusFilter] = useState<BoardStatusFilter>("All");
@@ -118,9 +126,15 @@ export function LostPetAnnouncementBoard() {
     async function init() {
       setIsAuthLoading(true);
       const supabase = getSupabaseClient();
-      const { data } = await supabase.auth.getSession();
+      const { data } = await supabase.auth.getUser();
       if (!mounted) return;
-      if (!data.session) { router.replace("/login"); return; }
+      const user = data.user;
+      if (!user) { router.replace("/login"); return; }
+
+      setCurrentUserId(user.id);
+      setCurrentUserRole((user.user_metadata?.role as AppRole | undefined) ?? "Owner");
+      setCurrentUserEmail(user.email || null);
+      setCurrentUserPhone((user.user_metadata?.phone as string | undefined) ?? null);
 
       setIsAuthLoading(false);
       setIsLoading(true);
@@ -293,6 +307,10 @@ export function LostPetAnnouncementBoard() {
                 report={item.data}
                 isWatched={watchedIds.includes(item.data.id)}
                 onToggleWatch={handleToggleWatch}
+                currentUserId={currentUserId}
+                currentUserRole={currentUserRole}
+                currentUserEmail={currentUserEmail}
+                currentUserPhone={currentUserPhone}
               />
             ) : (
               <FoundPetAnnouncementCard

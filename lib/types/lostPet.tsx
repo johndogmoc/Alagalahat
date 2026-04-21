@@ -16,6 +16,8 @@ export interface LostPetRegistrationSnapshot {
 
 export interface LostPetReport {
   id: string;
+  petId?: string | null;
+  reporterId?: string | null;
   pet: LostPetRegistrationSnapshot;
   lastKnownLocation: string;
   missingAt: string; // ISO datetime

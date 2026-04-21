@@ -31,6 +31,47 @@ function formatDate(dateStr: string) {
   return d.toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" });
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function getPetInitials(name: string) {
+  const cleaned = name.trim();
+  if (!cleaned) return "PT";
+  return cleaned.slice(0, 2).toUpperCase();
+}
+
+function createPetMarkerIcon(report: LostPetReport) {
+  const hasPhoto = Boolean(report.pet.petPhotoUrl);
+  const imageUrl = hasPhoto ? escapeHtml(report.pet.petPhotoUrl as string) : "";
+  const initials = escapeHtml(getPetInitials(report.pet.petName));
+  const markerRing = report.status === "Resolved" ? "#22c55e" : report.status === "Pending" ? "#f59e0b" : "#dc2626";
+
+  return L.divIcon({
+    className: "pet-map-marker",
+    html: `
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div style="width:48px;height:48px;border-radius:999px;overflow:hidden;border:3px solid ${markerRing};background:#ffffff;box-shadow:0 10px 24px rgba(15,23,42,0.24);display:flex;align-items:center;justify-content:center;">
+          ${
+            hasPhoto
+              ? `<img src="${imageUrl}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;" />`
+              : `<span style="font:700 14px Arial,sans-serif;color:#1e293b;">${initials}</span>`
+          }
+        </div>
+        <div style="width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:16px solid ${markerRing};margin-top:-2px;filter:drop-shadow(0 6px 10px rgba(15,23,42,0.22));"></div>
+      </div>
+    `,
+    iconSize: [48, 64],
+    iconAnchor: [24, 64],
+    popupAnchor: [0, -58]
+  });
+}
+
 export default function OverviewMap({ reports }: OverviewMapProps) {
   const markers = reports.filter(r => r.latitude != null && r.longitude != null);
 
@@ -57,7 +98,11 @@ export default function OverviewMap({ reports }: OverviewMapProps) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {markers.map((report) => (
-          <Marker key={report.id} position={[report.latitude as number, report.longitude as number]}>
+          <Marker
+            key={report.id}
+            position={[report.latitude as number, report.longitude as number]}
+            icon={createPetMarkerIcon(report)}
+          >
             <Popup>
               <div style={{ display: "flex", flexDirection: "column", gap: 8, minWidth: 200, padding: 4 }}>
                 {/* Pet photo + name */}

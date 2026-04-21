@@ -2,12 +2,20 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useState } from "react";
+
+import { FoundThisPetModal } from "@/components/lost-pets/FoundThisPetModal";
+import { Button } from "@/components/ui/button";
+import { canSeeFoundThisPet, type AppRole } from "@/lib/permissions";
 import type { LostPetReport } from "@/lib/types/lostPet";
 
 export interface LostPetAnnouncementCardProps {
   report: LostPetReport;
   isWatched?: boolean;
   onToggleWatch?: (reportId: string) => void;
+  currentUserId?: string | null;
+  currentUserRole?: AppRole | null;
+  currentUserEmail?: string | null;
+  currentUserPhone?: string | null;
 }
 
 /* ── Tiny inline SVG icons ── */
@@ -53,10 +61,24 @@ function timeAgo(dateStr: string) {
   return `${Math.floor(days / 7)}w ago`;
 }
 
-export function LostPetAnnouncementCard({ report, isWatched, onToggleWatch }: LostPetAnnouncementCardProps) {
+export function LostPetAnnouncementCard({
+  report,
+  isWatched,
+  onToggleWatch,
+  currentUserId,
+  currentUserRole,
+  currentUserEmail,
+  currentUserPhone
+}: LostPetAnnouncementCardProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [isFoundModalOpen, setIsFoundModalOpen] = useState(false);
   const isResolved = report.status === "Resolved";
   const statusClass = report.status === "Active" ? "active" : report.status === "Pending" ? "pending" : "resolved";
+  const canReportFound = !isResolved && canSeeFoundThisPet({
+    role: currentUserRole,
+    requesterId: currentUserId,
+    reporterId: report.reporterId
+  });
 
   const handleRipple = (e: React.MouseEvent<HTMLButtonElement>) => {
     const btn = e.currentTarget;
@@ -161,6 +183,17 @@ export function LostPetAnnouncementCard({ report, isWatched, onToggleWatch }: Lo
             </>
           )}
 
+          {canReportFound ? (
+            <>
+              <hr className="lpc-divider" />
+              <div style={{ display: "flex", justifyContent: "flex-start" }}>
+                <Button type="button" variant="amber" onClick={() => setIsFoundModalOpen(true)}>
+                  Found this Pet
+                </Button>
+              </div>
+            </>
+          ) : null}
+
           <hr className="lpc-divider" />
 
           {/* Contact CTA */}
@@ -195,6 +228,15 @@ export function LostPetAnnouncementCard({ report, isWatched, onToggleWatch }: Lo
           <img src={report.pet.petPhotoUrl} alt={report.pet.petName} onClick={(e) => e.stopPropagation()} />
         </div>
       )}
+
+      <FoundThisPetModal
+        reportId={report.id}
+        petName={report.pet.petName}
+        open={isFoundModalOpen}
+        onOpenChange={setIsFoundModalOpen}
+        currentUserEmail={currentUserEmail ?? null}
+        currentUserPhone={currentUserPhone ?? null}
+      />
     </>
   );
 }
