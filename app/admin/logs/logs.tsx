@@ -19,7 +19,7 @@ interface LogRow {
   created_at: string;
 }
 
-type ActionFilter = "All" | "pet" | "lost" | "user" | "system";
+type ActionFilter = "All" | "pet" | "lost" | "system";
 
 /* ---- Helpers ---- */
 function getActionConfig(action: string): { icon: typeof IconPaw; color: string; bg: string; label: string } {
@@ -58,7 +58,6 @@ function matchesFilter(action: string, filter: ActionFilter): boolean {
   const cfg = getActionConfig(action);
   if (filter === "pet") return cfg.label === "Pet";
   if (filter === "lost") return cfg.label === "Lost Pet";
-  if (filter === "user") return cfg.label === "User";
   if (filter === "system") return cfg.label === "System" || cfg.label === "Vaccination";
   return true;
 }
@@ -72,18 +71,70 @@ export default function AdminLogsPage() {
   async function load() {
     setLoading(true);
     const supabase = getSupabaseClient();
-    const { data, error } = await supabase
-      .from("activity_logs")
-      .select("id, action, details, user_id, created_at")
-      .order("created_at", { ascending: false })
-      .limit(100);
+    
+    try {
+      // Fetch activity logs
+      const { data: logsData } = await supabase
+        .from("activity_logs")
+        .select("id, action, details, user_id, created_at")
+        .order("created_at", { ascending: false })
+        .limit(50);
+        
+      // Fetch recent pets
+      const { data: petsData } = await supabase
+        .from("pets")
+        .select("id, name, species, owner_name, created_at")
+        .order("created_at", { ascending: false })
+        .limit(50);
+        
+      // Fetch recent lost reports
+      const { data: lostData } = await supabase
+        .from("lost_pet_reports")
+        .select("id, pet_name, species, created_at")
+        .order("created_at", { ascending: false })
+        .limit(50);
 
-    if (error) {
-      toast.error(error.message);
+      const aggregatedLogs: LogRow[] = [];
+
+      if (logsData) {
+        aggregatedLogs.push(...logsData.map(log => ({
+          id: log.id,
+          action: log.action,
+          details: log.details,
+          user_id: log.user_id,
+          created_at: log.created_at
+        })));
+      }
+
+      if (petsData) {
+        aggregatedLogs.push(...petsData.map(pet => ({
+          id: `pet-${pet.id}`,
+          action: "Pet Registration",
+          details: `New ${pet.species || 'pet'} registered: ${pet.name} (Owner: ${pet.owner_name || 'Unknown'})`,
+          user_id: null,
+          created_at: pet.created_at
+        })));
+      }
+
+      if (lostData) {
+        aggregatedLogs.push(...lostData.map(report => ({
+          id: `lost-${report.id}`,
+          action: "Lost Pet Report",
+          details: `A ${report.species || 'pet'} named ${report.pet_name} was reported lost.`,
+          user_id: null,
+          created_at: report.created_at
+        })));
+      }
+
+      // Sort all aggregated logs by date descending
+      aggregatedLogs.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      
+      setRows(aggregatedLogs.slice(0, 200));
+    } catch (err: any) {
+      toast.error(err.message || "Failed to load logs");
       setRows([]);
-    } else {
-      setRows((data as LogRow[]) ?? []);
     }
+    
     setLoading(false);
   }
 
@@ -101,7 +152,6 @@ export default function AdminLogsPage() {
     { key: "All", label: "All", icon: IconClipboard },
     { key: "pet", label: "Pets", icon: IconPaw },
     { key: "lost", label: "Lost", icon: IconAlertTriangle },
-    { key: "user", label: "Users", icon: IconUser },
     { key: "system", label: "System", icon: IconShield }
   ];
 
@@ -122,7 +172,7 @@ export default function AdminLogsPage() {
           <div style={{ position: "absolute", top: 0, right: 0, width: 200, height: 200, background: "rgba(255,255,255,0.1)", borderRadius: "50%", transform: "translate(50%, -50%)" }} aria-hidden="true" />
           <div style={{ position: "relative", zIndex: 1 }}>
             <h1 style={{ fontSize: 36, fontWeight: 800, margin: 0, letterSpacing: "-0.02em" }}>
-              Activity Logs
+              Reports & Logs
             </h1>
             <p style={{ margin: "12px 0 0", fontSize: 15, color: "rgba(255,255,255,0.85)", fontWeight: 500 }}>
               Monitor all system activity — pet registrations, lost reports, user actions, and more.

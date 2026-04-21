@@ -39,7 +39,7 @@ export async function POST(
     .neq("reporter_id", user.id)
     .single();
 
-  let eligibleReport = filteredLookup.data;
+  const eligibleReport = filteredLookup.data;
 
   if (!eligibleReport) {
     const fallbackLookup = await supabase

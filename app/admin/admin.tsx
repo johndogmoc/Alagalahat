@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { getSupabaseClient } from "@/lib/supabase";
@@ -37,6 +38,7 @@ function isAbortError(error: unknown) {
 }
 
 export default function AdminDashboardPage() {
+  const router = useRouter();
   const [stats, setStats] = useState({
     totalUsers: 0, totalPets: 0, pendingApprovals: 0,
     activeLost: 0, vaxMonth: 0, activeStaff: 0
@@ -198,11 +200,11 @@ export default function AdminDashboardPage() {
   }, []);
 
   const statCards = [
-    { label: "Total Registered Users", value: stats.totalUsers, color: "#1B4F8A", bgColor: "#EFF6FF", icon: IconUser },
-    { label: "Total Registered Pets", value: stats.totalPets, color: "#059669", bgColor: "#ECFDF5", icon: IconPaw },
-    { label: "Pending Approvals", value: stats.pendingApprovals, color: "#D97706", bgColor: "#FFFBEB", icon: IconClipboard },
-    { label: "Active Lost Reports", value: stats.activeLost, color: "#DC2626", bgColor: "#FEF2F2", icon: IconAlertTriangle },
-    { label: "Vaccinations This Month", value: stats.vaxMonth, color: "#2A9D8F", bgColor: "#F0FDFA", icon: IconSyringe },
+    { label: "Total Registered Users", value: stats.totalUsers, color: "#1B4F8A", bgColor: "#EFF6FF", icon: IconUser, href: "/admin/users" },
+    { label: "Total Registered Pets", value: stats.totalPets, color: "#059669", bgColor: "#ECFDF5", icon: IconPaw, href: "/admin/pets" },
+    { label: "Pending Approvals", value: stats.pendingApprovals, color: "#D97706", bgColor: "#FFFBEB", icon: IconClipboard, href: "/admin/pets" },
+    { label: "Active Lost Reports", value: stats.activeLost, color: "#DC2626", bgColor: "#FEF2F2", icon: IconAlertTriangle, href: "/lost-pets/admin" },
+    { label: "Vaccinations This Month", value: stats.vaxMonth, color: "#2A9D8F", bgColor: "#F0FDFA", icon: IconSyringe, href: "/admin/logs" },
   ];
 
   return (
@@ -235,7 +237,11 @@ export default function AdminDashboardPage() {
           {statCards.map((card) => {
             const StatIcon = card.icon;
             return (
-              <div key={card.label} role="region" aria-label={`${card.label}: ${card.value}`} style={{
+              <div key={card.label} 
+              role="button" 
+              aria-label={`${card.label}: ${card.value}`} 
+              onClick={() => router.push(card.href)}
+              style={{
                 background: "var(--color-card)", border: "1.5px solid var(--color-border)",
                 borderRadius: 16, padding: "28px 20px", boxShadow: "var(--shadow-sm)",
                 display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 12,
@@ -277,7 +283,11 @@ export default function AdminDashboardPage() {
         <div style={{
           marginBottom: 40
         }}>
-          <div role="region" aria-label={`Staff Accounts Active: ${stats.activeStaff}`} style={{
+          <div 
+          role="button" 
+          aria-label={`Staff Accounts Active: ${stats.activeStaff}`} 
+          onClick={() => router.push("/admin/users")}
+          style={{
             background: "var(--color-card)", border: "1.5px solid #DDD6FE",
             borderRadius: 16, padding: "32px 28px", boxShadow: "0 2px 8px rgba(124, 58, 237, 0.08)",
             display: "flex", alignItems: "center", gap: 20, maxWidth: 380,

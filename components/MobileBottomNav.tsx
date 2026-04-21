@@ -23,7 +23,8 @@ const staffItems = [
 
 const adminItems = [
   { href: "/admin", label: "Home", icon: IconHome },
-  { href: "/staff/pets", label: "Queue", icon: IconClipboard },
+  { href: "/admin/pets", label: "Queue", icon: IconClipboard },
+  { href: "/lost-pets/admin", label: "Lost", icon: IconAlertTriangle },
   { href: "/profile", label: "Profile", icon: IconUser }
 ] as const;
 

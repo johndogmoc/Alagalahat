@@ -177,23 +177,6 @@ export default function AdminSettingsPage() {
           </div>
         ) : (
           <div style={{ display: "grid", gap: 24 }}>
-            {/* Section 1: Barangay Info */}
-            <SettingsSection title="Barangay Information" icon={IconShield} description="Basic organizational details shown on certificates and public pages.">
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
-                <div style={{ display: "grid", gap: 6 }}>
-                  <Label htmlFor="barangayName">Barangay Name</Label>
-                  <Input id="barangayName" value={barangayName} onChange={(e) => setBarangayName(e.target.value)} placeholder="e.g. Barangay San Antonio" />
-                </div>
-                <div style={{ display: "grid", gap: 6 }}>
-                  <Label htmlFor="barangayAddress">Address</Label>
-                  <Input id="barangayAddress" value={barangayAddress} onChange={(e) => setBarangayAddress(e.target.value)} placeholder="Complete barangay address" />
-                </div>
-              </div>
-              <div style={{ display: "grid", gap: 6 }}>
-                <Label htmlFor="adminEmail">Admin Contact Email</Label>
-                <Input id="adminEmail" type="email" value={adminEmail} onChange={(e) => setAdminEmail(e.target.value)} placeholder="admin@barangay.gov.ph" />
-              </div>
-            </SettingsSection>
 
             {/* Section 2: Pet Configuration */}
             <SettingsSection title="Pet Configuration" icon={IconPaw} description="Configure the pet species and registration settings.">
