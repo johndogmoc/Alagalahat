@@ -97,32 +97,32 @@ export default function AdminLogsPage() {
       const aggregatedLogs: LogRow[] = [];
 
       if (logsData) {
-        aggregatedLogs.push(...logsData.map(log => ({
-          id: log.id,
-          action: log.action,
-          details: log.details,
-          user_id: log.user_id,
-          created_at: log.created_at
+        aggregatedLogs.push(...logsData.map((log: Record<string, unknown>) => ({
+          id: String(log.id),
+          action: String(log.action),
+          details: log.details ? String(log.details) : null,
+          user_id: log.user_id ? String(log.user_id) : null,
+          created_at: String(log.created_at)
         })));
       }
 
       if (petsData) {
-        aggregatedLogs.push(...petsData.map(pet => ({
-          id: `pet-${pet.id}`,
+        aggregatedLogs.push(...petsData.map((pet: Record<string, unknown>) => ({
+          id: `pet-${String(pet.id)}`,
           action: "Pet Registration",
-          details: `New ${pet.species || 'pet'} registered: ${pet.name} (Owner: ${pet.owner_name || 'Unknown'})`,
+          details: `New ${pet.species ? String(pet.species) : 'pet'} registered: ${String(pet.name)} (Owner: ${pet.owner_name ? String(pet.owner_name) : 'Unknown'})`,
           user_id: null,
-          created_at: pet.created_at
+          created_at: String(pet.created_at)
         })));
       }
 
       if (lostData) {
-        aggregatedLogs.push(...lostData.map(report => ({
-          id: `lost-${report.id}`,
+        aggregatedLogs.push(...lostData.map((report: Record<string, unknown>) => ({
+          id: `lost-${String(report.id)}`,
           action: "Lost Pet Report",
-          details: `A ${report.species || 'pet'} named ${report.pet_name} was reported lost.`,
+          details: `A ${report.species ? String(report.species) : 'pet'} named ${String(report.pet_name)} was reported lost.`,
           user_id: null,
-          created_at: report.created_at
+          created_at: String(report.created_at)
         })));
       }
 
@@ -130,8 +130,12 @@ export default function AdminLogsPage() {
       aggregatedLogs.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
       
       setRows(aggregatedLogs.slice(0, 200));
-    } catch (err: any) {
-      toast.error(err.message || "Failed to load logs");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message || "Failed to load logs");
+      } else {
+        toast.error("Failed to load logs");
+      }
       setRows([]);
     }
     
