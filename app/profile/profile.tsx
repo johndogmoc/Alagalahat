@@ -9,7 +9,8 @@ import type { SidebarRole } from "@/components/Sidebar";
 
 function roleFromMetadata(user: { user_metadata?: Record<string, unknown> } | null): SidebarRole {
   const r = user?.user_metadata?.role;
-  if (r === "Staff" || r === "Admin" || r === "Owner") return r;
+  if (r === "SuperAdmin" || r === "Admin") return "Admin";
+  if (r === "Staff" || r === "Owner") return r;
   return "Owner";
 }
 

@@ -39,6 +39,12 @@ function roleHome(role: Role) {
   return "/home";
 }
 
+function redirectToRoleHome(request: NextRequest, role: Role | null) {
+  const url = request.nextUrl.clone();
+  url.pathname = role ? roleHome(role) : "/login";
+  return NextResponse.redirect(url);
+}
+
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -107,24 +113,27 @@ export async function middleware(request: NextRequest) {
 
   // Role gates
   if (pathname.startsWith("/super-admin")) {
-    if (role !== "SuperAdmin") return NextResponse.redirect(new URL("/", request.url));
+    if (role !== "SuperAdmin") return redirectToRoleHome(request, role);
   }
   if (pathname.startsWith("/admin")) {
-    if (role !== "SuperAdmin" && role !== "Admin") return NextResponse.redirect(new URL("/", request.url));
+    if (role !== "SuperAdmin" && role !== "Admin") return redirectToRoleHome(request, role);
   }
   if (pathname.startsWith("/staff")) {
-    if (role !== "Staff" && role !== "Admin" && role !== "SuperAdmin") return NextResponse.redirect(new URL("/", request.url));
+    if (role !== "Staff" && role !== "Admin" && role !== "SuperAdmin") return redirectToRoleHome(request, role);
+  }
+  if (pathname.startsWith("/home")) {
+    if (role !== "Owner") return redirectToRoleHome(request, role);
   }
   if (pathname.startsWith("/owner")) {
-    if (role !== "Owner" && role !== "Admin" && role !== "SuperAdmin") return NextResponse.redirect(new URL("/", request.url));
+    if (role !== "Owner") return redirectToRoleHome(request, role);
   }
 
   // Lost pets access
   if (pathname.startsWith("/lost-pets/admin")) {
-    if (role !== "SuperAdmin" && role !== "Admin") return NextResponse.redirect(new URL("/", request.url));
+    if (role !== "SuperAdmin" && role !== "Admin") return redirectToRoleHome(request, role);
   }
   if (pathname.startsWith("/lost-pets/report")) {
-    if (role !== "Owner" && role !== "Staff" && role !== "Admin" && role !== "SuperAdmin") return NextResponse.redirect(new URL("/", request.url));
+    if (role !== "Owner" && role !== "Staff" && role !== "Admin" && role !== "SuperAdmin") return redirectToRoleHome(request, role);
   }
 
   // Dashboard shortcut
@@ -145,4 +154,3 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico).*)"
   ]
 };
-

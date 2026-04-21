@@ -111,12 +111,16 @@ export default function LoginPage() {
     const user = data.user;
     const role = user?.user_metadata?.role as string | undefined;
 
-    toast.success("Welcome back!");
-    
-    // Redirect based on role
     if (role === "SuperAdmin" || role === "Admin") {
-      router.replace("/admin");
-    } else if (role === "Staff") {
+      toast.error("This login is for users only. Please sign in through the Admin portal.");
+      await supabase.auth.signOut();
+      return;
+    }
+
+    toast.success("Welcome back!");
+
+    // Redirect based on role
+    if (role === "Staff") {
       router.replace("/staff");
     } else {
       router.replace("/home");

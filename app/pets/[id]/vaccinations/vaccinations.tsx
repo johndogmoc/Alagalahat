@@ -34,7 +34,8 @@ interface PetInfo {
 
 function roleFromUser(user: { user_metadata?: Record<string, unknown> } | null): SidebarRole {
   const r = user?.user_metadata?.role;
-  if (r === "Admin" || r === "Staff" || r === "Owner") return r;
+  if (r === "SuperAdmin" || r === "Admin") return "Admin";
+  if (r === "Staff" || r === "Owner") return r;
   return "Owner";
 }
 
